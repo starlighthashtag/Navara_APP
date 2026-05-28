@@ -1,0 +1,4253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuvara — Stories with Purpose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ─── TOKENS ──────────────────────────────────────────────── */
+      :root {
+        --blue: #0b1120;
+        --blue2: #111827;
+        --blue3: #1a2540;
+        --blue4: #222e4a;
+        --cyan: #4ecdc4;
+        --cyan2: #38b2aa;
+        --cyan3: rgba(78, 205, 196, 0.15);
+        --cyan4: rgba(78, 205, 196, 0.07);
+        --white: #f0f4ff;
+        --muted: #8892aa;
+        --muted2: #6070a0;
+        --border: rgba(78, 205, 196, 0.13);
+        --border2: rgba(78, 205, 196, 0.25);
+        --serif: "Cormorant Garamond", Georgia, serif;
+        --sans: "Outfit", sans-serif;
+        --bg: var(--blue);
+        --surface: var(--blue2);
+        --surface2: var(--blue3);
+        --surface3: var(--blue4);
+        --text: var(--white);
+        --text2: #c8d0e8;
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --rad: 12px;
+        --rad-sm: 8px;
+        --trans: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        --error: #e25c5c;
+        --success: #4ecca8;
+        --gold: #f5c518;
+        --gold2: #e6b800;
+      }
+      [data-theme="light"] {
+        --bg: #f0f4ff;
+        --surface: #ffffff;
+        --surface2: #e8edf8;
+        --surface3: #dde4f2;
+        --text: #0b1120;
+        --text2: #2a3560;
+        --muted: #6070a0;
+        --muted2: #8892aa;
+        --border: rgba(11, 17, 32, 0.1);
+        --border2: rgba(11, 17, 32, 0.2);
+        --shadow: 0 8px 32px rgba(11, 17, 32, 0.12);
+        --cyan3: rgba(78, 205, 196, 0.12);
+        --cyan4: rgba(78, 205, 196, 0.06);
+      }
+
+      /* ─── RESET ────────────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      button {
+        font-family: var(--sans);
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+      input,
+      textarea,
+      select {
+        font-family: var(--sans);
+      }
+      * {
+        transition: background-color 0.25s ease, border-color 0.25s ease;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--blue2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--cyan2);
+        border-radius: 3px;
+      }
+
+      /* ─── PAGE SYSTEM ──────────────────────────────────────────── */
+      .page {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+      .page.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ─── NAVBAR ───────────────────────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(11, 17, 32, 0.88);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        height: 64px;
+        display: flex;
+        align-items: center;
+        padding: 0 2rem;
+        gap: 1.5rem;
+      }
+      [data-theme="light"] nav {
+        background: rgba(240, 244, 255, 0.9);
+      }
+      .nav-logo {
+        font-family: var(--serif);
+        font-size: 1.7rem;
+        font-weight: 600;
+        color: var(--cyan);
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+      .nav-logo-motto {
+        font-size: 0.55rem;
+        font-family: var(--sans);
+        font-weight: 300;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.1rem;
+        list-style: none;
+        flex: 1;
+      }
+      .nav-links a {
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0.4rem 0.65rem;
+        border-radius: var(--rad-sm);
+        transition: color var(--trans), background var(--trans);
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--cyan);
+        background: var(--cyan4);
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-left: auto;
+      }
+
+      /* ─── LUCIDE ICON BUTTONS ──────────────────────────────────── */
+      .btn-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        transition: all var(--trans);
+        flex-shrink: 0;
+      }
+      .btn-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .btn-icon:hover {
+        color: var(--cyan);
+        border-color: var(--border2);
+      }
+      .btn-primary {
+        background: var(--cyan);
+        color: var(--blue);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.5rem 1.1rem;
+        border-radius: var(--rad-sm);
+        transition: all var(--trans);
+      }
+      .btn-primary:hover {
+        background: var(--cyan2);
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--cyan);
+        border: 1px solid var(--border2);
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.45rem 1rem;
+        border-radius: var(--rad-sm);
+        transition: all var(--trans);
+      }
+      .btn-outline:hover {
+        background: var(--cyan4);
+      }
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--cyan), #2a85ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--blue);
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        padding: 6px;
+      }
+      .hamburger span {
+        width: 20px;
+        height: 1.5px;
+        background: var(--muted);
+        display: block;
+        transition: all var(--trans);
+      }
+
+      /* ─── MAIN ─────────────────────────────────────────────────── */
+      .main {
+        padding-top: 64px;
+        min-height: 100vh;
+      }
+
+      /* ─── HERO ─────────────────────────────────────────────────── */
+      .hero {
+        position: relative;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        padding: 6rem 2rem 4rem;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 60% 80% at 70% 40%,
+            rgba(78, 205, 196, 0.08) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 20% 80%,
+            rgba(42, 133, 255, 0.06) 0%,
+            transparent 50%
+          );
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.04;
+        background-image: linear-gradient(var(--cyan) 1px, transparent 1px),
+          linear-gradient(90deg, var(--cyan) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+      .hero-content {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .hero-eyebrow {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .hero-eyebrow::before {
+        content: "";
+        width: 2rem;
+        height: 1px;
+        background: var(--cyan);
+        display: block;
+      }
+      .hero-title {
+        font-family: var(--serif);
+        font-size: clamp(3rem, 8vw, 6.5rem);
+        font-weight: 300;
+        line-height: 1.05;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        max-width: 14ch;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--cyan);
+      }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 48ch;
+        line-height: 1.75;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .hero-scroll {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--muted2);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        animation: bounce 2s ease-in-out infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(6px);
+        }
+      }
+      .hero-scroll-line {
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(to bottom, var(--cyan), transparent);
+      }
+
+      /* ─── SECTIONS ─────────────────────────────────────────────── */
+      section {
+        padding: 5rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 2.5rem;
+      }
+      .section-title {
+        font-family: var(--serif);
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 300;
+        color: var(--text);
+      }
+      .section-title em {
+        font-style: italic;
+        color: var(--cyan);
+      }
+      .see-all {
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: gap var(--trans);
+      }
+      .see-all:hover {
+        gap: 0.7rem;
+      }
+      .section-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .section-label::before {
+        content: "";
+        width: 1.5rem;
+        height: 1px;
+        background: var(--cyan);
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* ─── CARDS ────────────────────────────────────────────────── */
+      .card-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+      .card-grid-3 {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      .card-grid-4 {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform var(--trans), border-color var(--trans),
+          box-shadow var(--trans);
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border2);
+        box-shadow: var(--shadow);
+      }
+      .card-img {
+        aspect-ratio: 16/9;
+        background: var(--surface2);
+        position: relative;
+        overflow: hidden;
+      }
+      .card-img-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+      }
+      .card-body {
+        padding: 1.25rem;
+      }
+      .card-tag {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.6rem;
+      }
+      .card-title {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        font-weight: 400;
+        line-height: 1.3;
+        color: var(--text);
+        margin-bottom: 0.6rem;
+      }
+      .card-excerpt {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .card-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--muted2);
+      }
+      .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-left: auto;
+      }
+
+      /* ─── ACTION BUTTONS (Lucide icons) ───────────────────────── */
+      .action-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--rad-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        transition: all var(--trans);
+        flex-shrink: 0;
+      }
+      .action-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: fill 0.2s, stroke 0.2s;
+      }
+      .action-btn:hover,
+      .action-btn.active {
+        color: var(--cyan);
+        border-color: var(--border2);
+        background: var(--cyan4);
+      }
+      .action-btn.liked {
+        color: #e25c5c;
+        border-color: rgba(226, 92, 92, 0.3);
+        background: rgba(226, 92, 92, 0.08);
+      }
+      .action-btn.liked svg {
+        fill: #e25c5c;
+        stroke: #e25c5c;
+      }
+      .action-btn.bookmarked svg {
+        fill: var(--cyan);
+      }
+
+      /* ─── FEATURED ─────────────────────────────────────────────── */
+      .featured {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        overflow: hidden;
+        margin-bottom: 3rem;
+        cursor: pointer;
+        transition: border-color var(--trans), box-shadow var(--trans);
+      }
+      .featured:hover {
+        border-color: var(--border2);
+        box-shadow: var(--shadow);
+      }
+      .featured-img {
+        background: var(--surface2);
+        min-height: 360px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        overflow: hidden;
+      }
+      .featured-img-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, transparent 60%, var(--surface));
+      }
+      .featured-body {
+        padding: 2.5rem 2.5rem 2.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .featured-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1rem;
+      }
+      .featured-title {
+        font-family: var(--serif);
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 300;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      .featured-excerpt {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+      .featured-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: var(--muted2);
+      }
+      .read-time {
+        background: var(--cyan4);
+        color: var(--cyan);
+        border: 1px solid var(--cyan3);
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 500;
+      }
+
+      /* ─── THOUGHTS ─────────────────────────────────────────────── */
+      .thought-item {
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        border-left: 3px solid var(--cyan);
+        transition: transform var(--trans), box-shadow var(--trans);
+        cursor: pointer;
+        margin-bottom: 1rem;
+      }
+      .thought-item:hover {
+        transform: translateX(4px);
+        box-shadow: var(--shadow);
+      }
+      .thought-text {
+        font-family: var(--serif);
+        font-size: 1.15rem;
+        font-weight: 300;
+        line-height: 1.65;
+        color: var(--text);
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+      .thought-meta {
+        font-size: 0.75rem;
+        color: var(--muted2);
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      /* ─── VIDEO CARDS ──────────────────────────────────────────── */
+      .video-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        overflow: hidden;
+        cursor: pointer;
+        transition: all var(--trans);
+      }
+      .video-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border2);
+        box-shadow: var(--shadow);
+      }
+      .video-thumb {
+        aspect-ratio: 16/9;
+        background: var(--surface2);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        overflow: hidden;
+      }
+      .play-btn {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transition: opacity var(--trans);
+        z-index: 2;
+      }
+      .play-circle {
+        width: 54px;
+        height: 54px;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(78, 205, 196, 0.25);
+        backdrop-filter: blur(4px);
+        transition: transform var(--trans), background var(--trans);
+      }
+      .play-circle svg {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+        stroke: none;
+        margin-left: 3px;
+      }
+      .video-card:hover .play-btn {
+        opacity: 1;
+      }
+      .video-card:hover .play-circle {
+        transform: scale(1.08);
+        background: rgba(78, 205, 196, 0.4);
+      }
+      .video-duration {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.6rem;
+        z-index: 3;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+      }
+
+      /* ─── VIDEO LIGHTBOX ───────────────────────────────────────── */
+      .lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        background: rgba(0, 0, 0, 0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        animation: fadeIn 0.2s ease;
+      }
+      .lightbox-overlay.open {
+        display: flex;
+      }
+      .lightbox-inner {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        background: #000;
+        border-radius: var(--rad);
+        overflow: hidden;
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        z-index: 10;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--trans);
+      }
+      .lightbox-close:hover {
+        background: var(--cyan);
+        border-color: var(--cyan);
+      }
+      .lightbox-close svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+      .lightbox-video {
+        width: 100%;
+        display: block;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+      .lightbox-iframe {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border: none;
+        display: block;
+      }
+      .lightbox-info {
+        padding: 1rem 1.25rem;
+        background: var(--surface);
+      }
+      .lightbox-title {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-bottom: 0.25rem;
+      }
+      .lightbox-tag {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--cyan);
+      }
+
+      /* ─── READING PROGRESS ─────────────────────────────────────── */
+      .reading-progress {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        height: 2px;
+        background: var(--cyan);
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 0.1s linear;
+      }
+
+      /* ─── ARTICLE VIEW ─────────────────────────────────────────── */
+      .article-view {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+      }
+      .article-tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .article-title {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 300;
+        line-height: 1.15;
+        margin-bottom: 1rem;
+      }
+      .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        color: var(--muted);
+        padding: 1rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
+      .article-body p {
+        font-size: 1.05rem;
+        line-height: 1.85;
+        color: var(--text2);
+        margin-bottom: 1.5rem;
+        font-weight: 300;
+      }
+      .article-body p:first-child::first-letter {
+        font-family: var(--serif);
+        font-size: 3.5rem;
+        font-weight: 400;
+        float: left;
+        line-height: 0.85;
+        margin: 0.08em 0.1em 0 0;
+        color: var(--cyan);
+      }
+      .article-body h3 {
+        font-family: var(--serif);
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--text);
+        margin: 2rem 0 1rem;
+      }
+      .article-body blockquote {
+        border-left: 3px solid var(--cyan);
+        padding: 0.5rem 0 0.5rem 1.5rem;
+        margin: 2rem 0;
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 1.2rem;
+        color: var(--text2);
+      }
+      .article-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin: 2rem 0;
+        padding: 1.5rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+      .article-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        padding: 0.5rem 1rem;
+        border-radius: var(--rad-sm);
+        transition: all var(--trans);
+      }
+      .article-action-btn svg {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .article-action-btn:hover {
+        color: var(--cyan);
+        border-color: var(--border2);
+      }
+      .article-action-btn.active {
+        color: var(--cyan);
+        border-color: var(--border2);
+        background: var(--cyan4);
+      }
+      .article-action-btn.active svg {
+        fill: var(--cyan);
+      }
+      .article-action-btn.liked-btn {
+        color: #e25c5c;
+        border-color: rgba(226, 92, 92, 0.3);
+        background: rgba(226, 92, 92, 0.08);
+      }
+      .article-action-btn.liked-btn svg {
+        fill: #e25c5c;
+        stroke: #e25c5c;
+      }
+
+      /* ─── FEEDBACK ─────────────────────────────────────────────── */
+      .feedback-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        padding: 2rem;
+        margin: 3rem 0;
+      }
+      .feedback-title {
+        font-family: var(--serif);
+        font-size: 1.3rem;
+        font-weight: 300;
+        margin-bottom: 0.4rem;
+      }
+      .feedback-sub {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+      .feedback-stars {
+        display: flex;
+        gap: 0.3rem;
+        margin-bottom: 1.25rem;
+      }
+      .star-btn {
+        font-size: 1.6rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #555;
+        transition: color var(--trans), transform var(--trans);
+        line-height: 1;
+        /* gold stars */
+      }
+      .star-btn:hover ~ .star-btn,
+      .star-btn:hover {
+        color: var(--gold);
+        transform: scale(1.15);
+      }
+      .star-btn.active {
+        color: var(--gold);
+      }
+      /* star hover: highlight all stars up to hovered one */
+      .feedback-stars:hover .star-btn {
+        color: var(--gold2);
+      }
+      .feedback-stars .star-btn:hover ~ .star-btn {
+        color: #555;
+      }
+      .feedback-types {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .feedback-tag {
+        padding: 0.3rem 0.85rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: var(--surface2);
+        cursor: pointer;
+        transition: all var(--trans);
+      }
+      .feedback-tag:hover,
+      .feedback-tag.selected {
+        color: var(--cyan);
+        border-color: var(--border2);
+        background: var(--cyan4);
+      }
+      .feedback-textarea {
+        width: 100%;
+        min-height: 90px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--rad-sm);
+        padding: 0.75rem 1rem;
+        color: var(--text);
+        font-size: 0.88rem;
+        resize: vertical;
+        outline: none;
+        transition: border-color var(--trans);
+        margin-bottom: 1rem;
+      }
+      .feedback-textarea:focus {
+        border-color: var(--border2);
+      }
+      .feedback-submitted {
+        display: none;
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--cyan);
+      }
+      .feedback-submitted .check {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* ─── PAGE FEEDBACK ────────────────────────────────────────── */
+      .page-feedback {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 4rem;
+      }
+      .page-feedback-inner {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        padding: 2rem 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .page-feedback-text {
+        flex: 1;
+        min-width: 200px;
+      }
+      .page-feedback-text h4 {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-bottom: 0.25rem;
+      }
+      .page-feedback-text p {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .feedback-emoji-row {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .emoji-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 1.3rem;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--trans);
+      }
+      .emoji-btn:hover {
+        border-color: var(--border2);
+        background: var(--cyan4);
+        transform: scale(1.1);
+      }
+
+      /* ─── SEARCH ───────────────────────────────────────────────── */
+      .search-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: rgba(11, 17, 32, 0.95);
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 15vh;
+      }
+      [data-theme="light"] .search-overlay {
+        background: rgba(240, 244, 255, 0.95);
+      }
+      .search-overlay.open {
+        display: flex;
+      }
+      .search-box {
+        width: 100%;
+        max-width: 600px;
+        padding: 0 1.5rem;
+      }
+      .search-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--rad);
+        padding: 0 1.25rem;
+      }
+      .search-input-wrap svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .search-input {
+        flex: 1;
+        height: 56px;
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        color: var(--text);
+        outline: none;
+      }
+      .search-input::placeholder {
+        color: var(--muted2);
+      }
+      .search-close {
+        font-size: 0.85rem;
+        color: var(--muted);
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        transition: all var(--trans);
+      }
+      .search-close:hover {
+        color: var(--text);
+        border-color: var(--border2);
+      }
+      .search-results {
+        margin-top: 1.5rem;
+      }
+      .search-result-item {
+        padding: 1rem 1.25rem;
+        border-radius: var(--rad-sm);
+        cursor: pointer;
+        transition: background var(--trans);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .search-result-item:hover {
+        background: var(--surface2);
+      }
+      .search-result-item svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--cyan);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .sr-type {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.3rem;
+      }
+      .sr-title {
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      /* ─── AUTH MODAL ───────────────────────────────────────────── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
+        background: rgba(11, 17, 32, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--rad);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 440px;
+        animation: modalIn 0.3s ease;
+        position: relative;
+      }
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.94) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .modal-title {
+        font-family: var(--serif);
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.3rem;
+      }
+      .modal-sub {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 1.75rem;
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1.25rem;
+        color: var(--muted);
+        cursor: pointer;
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-close svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+      .field {
+        margin-bottom: 1rem;
+      }
+      .field label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+      }
+      .field input {
+        width: 100%;
+        height: 44px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--rad-sm);
+        padding: 0 1rem;
+        color: var(--text);
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color var(--trans);
+      }
+      .field input:focus {
+        border-color: var(--border2);
+      }
+      .field-hint {
+        font-size: 0.72rem;
+        color: var(--muted2);
+        margin-top: 0.3rem;
+      }
+      .field-error {
+        font-size: 0.72rem;
+        color: var(--error);
+        margin-top: 0.3rem;
+        display: none;
+      }
+      .field input.invalid {
+        border-color: var(--error);
+      }
+      .field input.valid {
+        border-color: var(--success);
+      }
+      .modal-footer {
+        margin-top: 1.25rem;
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .modal-footer a {
+        color: var(--cyan);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+      }
+      .username-status {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.72rem;
+        margin-top: 0.3rem;
+      }
+
+      /* ─── ADMIN SETUP SCREEN ───────────────────────────────────── */
+      .setup-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 8000;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+      .setup-box {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--rad);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 420px;
+      }
+      .setup-logo {
+        font-family: var(--serif);
+        font-size: 2rem;
+        color: var(--cyan);
+        margin-bottom: 0.25rem;
+      }
+      .setup-tagline {
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 2rem;
+      }
+
+      /* ─── BOOKMARKS / PROFILE ──────────────────────────────────── */
+      .bookmarks-page {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .page-header {
+        margin-bottom: 3rem;
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 300;
+      }
+      .page-title em {
+        font-style: italic;
+        color: var(--cyan);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+      .profile-header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 3rem 2rem 2rem;
+      }
+      .profile-header-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-end;
+        gap: 2rem;
+      }
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--cyan), #2a85ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--blue);
+        flex-shrink: 0;
+      }
+      .profile-name {
+        font-family: var(--serif);
+        font-size: 2rem;
+        font-weight: 300;
+        margin-bottom: 0.25rem;
+      }
+      .profile-bio {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .profile-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        padding: 0 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .profile-tab {
+        padding: 1rem 1.25rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: all var(--trans);
+      }
+      .profile-tab:hover {
+        color: var(--text);
+      }
+      .profile-tab.active {
+        color: var(--cyan);
+        border-bottom-color: var(--cyan);
+      }
+
+      /* ─── ADMIN ────────────────────────────────────────────────── */
+      .admin-layout {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        min-height: calc(100vh - 64px);
+      }
+      .admin-sidebar {
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 1.5rem 0;
+        position: sticky;
+        top: 64px;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+      }
+      .admin-nav-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted2);
+        padding: 0.75rem 1.25rem 0.4rem;
+      }
+      .admin-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all var(--trans);
+        border-left: 2px solid transparent;
+      }
+      .admin-nav-item svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .admin-nav-item:hover {
+        color: var(--text);
+        background: var(--surface2);
+      }
+      .admin-nav-item.active {
+        color: var(--cyan);
+        border-left-color: var(--cyan);
+        background: var(--cyan4);
+      }
+      .admin-main {
+        padding: 2rem 2.5rem;
+      }
+      .admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+      .admin-title {
+        font-family: var(--serif);
+        font-size: 1.6rem;
+        font-weight: 300;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rad);
+        padding: 1.25rem;
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 300;
+        color: var(--text);
+        font-family: var(--serif);
+      }
+      .stat-change {
+        font-size: 0.75rem;
+        color: #4ecca8;
+        margin-top: 0.25rem;
+      }
+      .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+      .admin-table th {
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .admin-table td {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text2);
+        vertical-align: middle;
+      }
+      .admin-table tr:hover td {
+        background: var(--surface2);
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .status-published {
+        background: rgba(78, 205, 196, 0.12);
+        color: var(--cyan);
+      }
+      .status-draft {
+        background: rgba(255, 200, 100, 0.12);
+        color: #ffc864;
+      }
+      .upload-area {
+        border: 2px dashed var(--border2);
+        border-radius: var(--rad);
+        padding: 2.5rem;
+        text-align: center;
+        color: var(--muted);
+        transition: all var(--trans);
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .upload-area:hover {
+        border-color: var(--cyan);
+        background: var(--cyan4);
+        color: var(--text);
+      }
+      .upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+      }
+      .upload-progress {
+        display: none;
+        margin-top: 1rem;
+      }
+      .upload-progress-bar {
+        height: 4px;
+        background: var(--surface3);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+      }
+      .upload-progress-fill {
+        height: 100%;
+        background: var(--cyan);
+        width: 0;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+      }
+      .video-preview-wrap {
+        display: none;
+        margin-bottom: 1.5rem;
+        border-radius: var(--rad);
+        overflow: hidden;
+        background: #000;
+        max-height: 300px;
+      }
+      .video-preview-wrap video {
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        display: block;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .admin-field label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+      }
+      .admin-field input,
+      .admin-field select,
+      .admin-field textarea {
+        width: 100%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--rad-sm);
+        color: var(--text);
+        font-size: 0.9rem;
+        outline: none;
+        padding: 0.6rem 0.85rem;
+        transition: border-color var(--trans);
+      }
+      .admin-field textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .admin-field input:focus,
+      .admin-field select:focus,
+      .admin-field textarea:focus {
+        border-color: var(--border2);
+      }
+      .admin-field select option {
+        background: var(--surface2);
+        color: var(--text);
+      }
+      .archive-filters {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .filter-chip {
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: var(--surface);
+        cursor: pointer;
+        transition: all var(--trans);
+      }
+      .filter-chip:hover,
+      .filter-chip.active {
+        color: var(--cyan);
+        border-color: var(--border2);
+        background: var(--cyan4);
+      }
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 5000;
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--rad-sm);
+        padding: 0.85rem 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text);
+        box-shadow: var(--shadow);
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 300px;
+      }
+      .toast.show {
+        display: flex;
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .toast-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--cyan);
+        flex-shrink: 0;
+      }
+
+      /* ─── MOBILE ───────────────────────────────────────────────── */
+      @media (max-width: 900px) {
+        .nav-links {
+          display: none;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .featured {
+          grid-template-columns: 1fr;
+        }
+        .featured-img {
+          min-height: 200px;
+        }
+        .featured-body {
+          padding: 1.5rem;
+        }
+        .admin-layout {
+          grid-template-columns: 1fr;
+        }
+        .admin-sidebar {
+          display: none;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          min-height: 75vh;
+        }
+        .page-feedback-inner {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+      @media (max-width: 600px) {
+        nav {
+          padding: 0 1rem;
+          gap: 0.75rem;
+        }
+        section {
+          padding: 3rem 1rem;
+        }
+        .card-grid-3,
+        .card-grid-4 {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ADMIN FIRST-LAUNCH SETUP -->
+    <div class="setup-overlay" id="setupOverlay" style="display: none">
+      <div class="setup-box">
+        <div class="setup-logo">Nuvara</div>
+        <div class="setup-tagline">Stories with Purpose</div>
+        <h2
+          style="
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 0.4rem;
+          "
+        >
+          Create Admin Account
+        </h2>
+        <p
+          style="
+            font-size: 0.83rem;
+            color: var(--muted);
+            margin-bottom: 1.75rem;
+          "
+        >
+          This is your one-time setup. These credentials will be stored securely
+          and used to access the admin dashboard.
+        </p>
+        <div class="field">
+          <label>Admin Username</label
+          ><input
+            type="text"
+            id="setupUser"
+            placeholder="5–10 letters & numbers"
+            maxlength="10"
+            oninput="liveUsernameCheck(this)"
+          />
+          <div class="username-status" id="usernameStatus"></div>
+        </div>
+        <div class="field">
+          <label>Admin Password</label
+          ><input
+            type="password"
+            id="setupPass"
+            placeholder="At least 8 characters"
+          />
+        </div>
+        <div class="field">
+          <label>Confirm Password</label
+          ><input
+            type="password"
+            id="setupPass2"
+            placeholder="Repeat password"
+          />
+          <div class="field-error" id="setupErr"></div>
+        </div>
+        <button
+          class="btn-primary"
+          style="
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+          "
+          onclick="completeSetup()"
+        >
+          Create Admin Account
+        </button>
+        <p
+          style="
+            font-size: 0.72rem;
+            color: var(--muted2);
+            margin-top: 1rem;
+            text-align: center;
+          "
+        >
+          These credentials are stored locally in your browser. Keep them safe.
+        </p>
+      </div>
+    </div>
+
+    <!-- READING PROGRESS -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+      <div class="nav-logo" onclick="showPage('home')">
+        Navara
+        <span class="nav-logo-motto">Stories with Purpose</span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li>
+          <a href="#" onclick="showPage('home')" data-page="home" class="active"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a href="#" onclick="showPage('articles')" data-page="articles"
+            >Articles</a
+          >
+        </li>
+        <li>
+          <a href="#" onclick="showPage('stories')" data-page="stories"
+            >Stories</a
+          >
+        </li>
+        <li>
+          <a href="#" onclick="showPage('videos')" data-page="videos">Videos</a>
+        </li>
+        <li>
+          <a href="#" onclick="showPage('thoughts')" data-page="thoughts"
+            >Thoughts</a
+          >
+        </li>
+        <li>
+          <a href="#" onclick="showPage('archives')" data-page="archives"
+            >Archives</a
+          >
+        </li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-icon" onclick="toggleSearch()" title="Search">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+        <button
+          class="btn-icon"
+          id="themeToggle"
+          onclick="toggleTheme()"
+          title="Toggle theme"
+        >
+          <svg id="themeIcon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <div id="navAuth">
+          <button
+            class="btn-outline"
+            onclick="openModal('login')"
+            style="margin-right: 0.5rem"
+          >
+            Sign in
+          </button>
+          <button class="btn-primary" onclick="openModal('signup')">
+            Join
+          </button>
+        </div>
+        <div
+          id="navUser"
+          style="display: none; align-items: center; gap: 0.5rem"
+        >
+          <button
+            class="btn-icon"
+            onclick="showPage('bookmarks')"
+            title="Bookmarks"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+          </button>
+          <div class="avatar" id="userAvatar" onclick="showPage('profile')">
+            ?
+          </div>
+        </div>
+        <div class="hamburger" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- HOME -->
+      <div class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-bg"></div>
+          <div class="hero-grid"></div>
+          <div class="hero-content">
+            <div class="hero-eyebrow">Stories with Purpose</div>
+            <h1 class="hero-title">
+              Stories that <em>move</em> the world forward
+            </h1>
+            <p class="hero-sub">
+              Nuvara is a curated space for awareness articles, short stories,
+              thought pieces, and visual media — designed to inform, inspire,
+              and connect.
+            </p>
+            <div class="hero-actions">
+              <button
+                class="btn-primary"
+                style="padding: 0.75rem 1.75rem; font-size: 0.9rem"
+                onclick="showPage('articles')"
+              >
+                Explore Articles
+              </button>
+              <button
+                class="btn-outline"
+                style="padding: 0.75rem 1.5rem; font-size: 0.9rem"
+                onclick="showPage('stories')"
+              >
+                Read Stories
+              </button>
+            </div>
+          </div>
+          <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="hero-scroll-line"></div>
+          </div>
+        </div>
+        <section>
+          <div class="section-label">Featured</div>
+          <div id="featuredBlock"></div>
+          <div class="section-header">
+            <h2 class="section-title">Trending <em>Now</em></h2>
+            <a class="see-all" onclick="showPage('articles')">All Articles →</a>
+          </div>
+          <div class="card-grid card-grid-3" id="trendingGrid"></div>
+        </section>
+        <div class="divider"></div>
+        <section>
+          <div class="section-header">
+            <h2 class="section-title">Latest <em>Thoughts</em></h2>
+            <a class="see-all" onclick="showPage('thoughts')">All Thoughts →</a>
+          </div>
+          <div id="latestThoughts"></div>
+        </section>
+        <div class="divider"></div>
+        <section>
+          <div class="section-header">
+            <h2 class="section-title">Short <em>Videos</em></h2>
+            <a class="see-all" onclick="showPage('videos')">All Videos →</a>
+          </div>
+          <div class="card-grid card-grid-4" id="homeVideos"></div>
+        </section>
+        <div class="page-feedback">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>How is your Nuvara experience?</h4>
+              <p>Your feedback helps us publish stories that matter more.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARTICLES -->
+      <div class="page" id="page-articles">
+        <section>
+          <div class="page-header">
+            <div class="section-label">Knowledge & Perspective</div>
+            <h1 class="page-title">Articles</h1>
+          </div>
+          <div class="archive-filters" id="articleFilters"></div>
+          <div class="card-grid card-grid-3" id="articlesGrid"></div>
+        </section>
+        <div class="page-feedback">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>Are these articles meaningful to you?</h4>
+              <p>Tell us what topics you'd like to see more of.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARTICLE VIEW -->
+      <div class="page" id="page-article">
+        <div class="article-view" id="articleContent"></div>
+      </div>
+
+      <!-- STORIES -->
+      <div class="page" id="page-stories">
+        <section>
+          <div class="page-header">
+            <div class="section-label">Human Experience</div>
+            <h1 class="page-title">Short <em>Stories</em></h1>
+          </div>
+          <div class="card-grid card-grid-3" id="storiesGrid"></div>
+        </section>
+        <div class="page-feedback">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>Did these stories move you?</h4>
+              <p>Help us understand which narratives resonate most.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEOS -->
+      <div class="page" id="page-videos">
+        <section>
+          <div class="page-header">
+            <div class="section-label">Visual Stories</div>
+            <h1 class="page-title">Short <em>Videos</em></h1>
+          </div>
+          <div class="card-grid card-grid-4" id="videosGrid"></div>
+        </section>
+        <div class="page-feedback">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>How's the video content?</h4>
+              <p>Let us know what kinds of videos you want more of.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THOUGHTS -->
+      <div class="page" id="page-thoughts">
+        <section style="max-width: 720px">
+          <div class="page-header">
+            <div class="section-label">Micro-Reflections</div>
+            <h1 class="page-title"><em>Thoughts</em></h1>
+          </div>
+          <div id="allThoughts"></div>
+        </section>
+        <div class="page-feedback" style="max-width: 720px">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>Do these reflections speak to you?</h4>
+              <p>We write these with intention — your reaction guides us.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHIVES -->
+      <div class="page" id="page-archives">
+        <section>
+          <div class="page-header">
+            <div class="section-label">The Complete Record</div>
+            <h1 class="page-title">Archives</h1>
+          </div>
+          <div class="archive-filters" id="archiveFilters"></div>
+          <div class="card-grid card-grid-3" id="archivesGrid"></div>
+        </section>
+        <div class="page-feedback">
+          <div class="page-feedback-inner">
+            <div class="page-feedback-text">
+              <h4>Finding what you're looking for?</h4>
+              <p>Help us improve how we organize our content archive.</p>
+            </div>
+            <div class="feedback-emoji-row">
+              <button class="emoji-btn" onclick="quickFeedback(this,'😞')">
+                😞</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😐')">
+                😐
+              </button>
+              <button class="emoji-btn" onclick="quickFeedback(this,'🙂')">
+                🙂</button
+              ><button class="emoji-btn" onclick="quickFeedback(this,'😍')">
+                😍
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKMARKS -->
+      <div class="page" id="page-bookmarks">
+        <div class="bookmarks-page">
+          <div class="page-header">
+            <div class="section-label">Your Library</div>
+            <h1 class="page-title">Saved <em>Content</em></h1>
+          </div>
+          <div id="bookmarksContent"></div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="page" id="page-profile">
+        <div class="profile-header">
+          <div class="profile-header-inner">
+            <div class="profile-avatar" id="profileAvatar">?</div>
+            <div>
+              <div class="profile-name" id="profileName">—</div>
+              <div class="profile-bio" id="profileBio">Nuvara reader</div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-tabs">
+          <div
+            class="profile-tab active"
+            onclick="switchProfileTab(this,'liked')"
+          >
+            Liked Content
+          </div>
+          <div class="profile-tab" onclick="showPage('bookmarks')">
+            Bookmarks
+          </div>
+          <div class="profile-tab" onclick="switchProfileTab(this,'settings')">
+            Settings
+          </div>
+        </div>
+        <section id="profileTabContent"></section>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="page" id="page-admin">
+        <div class="admin-layout">
+          <aside class="admin-sidebar">
+            <div class="admin-nav-label">Overview</div>
+            <div
+              class="admin-nav-item active"
+              onclick="adminTab(event,'overview')"
+            >
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" /></svg
+              ><span>Dashboard</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'content')">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" /></svg
+              ><span>All Content</span>
+            </div>
+            <div class="admin-nav-label">Create</div>
+            <div class="admin-nav-item" onclick="adminTab(event,'upload')">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                />
+                <path
+                  d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                /></svg
+              ><span>New Article</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'story')">
+              <svg viewBox="0 0 24 24">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg
+              ><span>New Story</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'video')">
+              <svg viewBox="0 0 24 24">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg
+              ><span>Upload Video</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'thought')">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                /></svg
+              ><span>New Thought</span>
+            </div>
+            <div class="admin-nav-label">Manage</div>
+            <div class="admin-nav-item" onclick="adminTab(event,'comments')">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                />
+                <line x1="9" y1="10" x2="15" y2="10" />
+                <line x1="9" y1="14" x2="13" y2="14" /></svg
+              ><span>Comments</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'feedback')">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" /></svg
+              ><span>Feedback</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'users')">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg
+              ><span>Users</span>
+            </div>
+            <div class="admin-nav-item" onclick="adminTab(event,'archives')">
+              <svg viewBox="0 0 24 24">
+                <polyline points="21 8 21 21 3 21 3 8" />
+                <rect x="1" y="3" width="22" height="5" />
+                <line x1="10" y1="12" x2="14" y2="12" /></svg
+              ><span>Archives</span>
+            </div>
+          </aside>
+          <div class="admin-main" id="adminMain"></div>
+        </div>
+      </div>
+    </div>
+    <!-- /main -->
+
+    <!-- VIDEO LIGHTBOX -->
+    <div
+      class="lightbox-overlay"
+      id="lightboxOverlay"
+      onclick="closeLightbox(event)"
+    >
+      <div class="lightbox-inner" id="lightboxInner">
+        <button class="lightbox-close" onclick="closeLightbox()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div id="lightboxMedia"></div>
+        <div class="lightbox-info">
+          <div class="lightbox-tag" id="lightboxTag"></div>
+          <div class="lightbox-title" id="lightboxTitle"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH OVERLAY -->
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-box">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search articles, stories, thoughts…"
+            oninput="handleSearch(this.value)"
+          />
+          <button class="search-close" onclick="toggleSearch()">ESC</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div
+      class="modal-overlay"
+      id="authModal"
+      onclick="closeModalOutside(event)"
+    >
+      <div class="modal">
+        <button class="modal-close" onclick="closeModal()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <div class="toast-dot"></div>
+      <span id="toastMsg"></span>
+    </div>
+    <script>
+      // ─── SVG ICON HELPERS ──────────────────────────────────────────
+      const ICONS = {
+        heart: `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+        heartFill: `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#e25c5c;fill:#e25c5c;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+        bookmark: `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+        bookmarkFill: `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--cyan);fill:var(--cyan);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+        share: `<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`,
+        play: `<svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff;stroke:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+        article: `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+        story: `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+        thought: `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+        video: `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`,
+      };
+
+      // ─── LOCALSTORAGE ──────────────────────────────────────────────
+      const LS = {
+        get: (k, fb = null) => {
+          try {
+            const v = localStorage.getItem(k);
+            return v !== null ? JSON.parse(v) : fb;
+          } catch {
+            return fb;
+          }
+        },
+        set: (k, v) => {
+          try {
+            localStorage.setItem(k, JSON.stringify(v));
+          } catch (e) {
+            console.warn(e);
+          }
+        },
+        del: (k) => {
+          try {
+            localStorage.removeItem(k);
+          } catch {}
+        },
+      };
+
+      // ─── SEED DATA ─────────────────────────────────────────────────
+      const SEED = {
+        articles: [],
+        stories: [],
+        videos: [],
+        thoughts: [],
+      };
+
+      const ARTICLE_BODY = `<p>Full article content goes here. The admin can write the complete article body when publishing through the admin dashboard.</p>`;
+
+      function loadDATA() {
+        return {
+          articles: [...SEED.articles, ...LS.get("nuvara-custom-articles", [])],
+          stories: [...SEED.stories, ...LS.get("nuvara-custom-stories", [])],
+          videos: [...SEED.videos, ...LS.get("nuvara-custom-videos", [])],
+          thoughts: [...SEED.thoughts, ...LS.get("nuvara-custom-thoughts", [])],
+        };
+      }
+      let DATA = loadDATA();
+
+      // ─── STATE ─────────────────────────────────────────────────────
+      const state = {
+        theme: LS.get("nuvara-theme", "dark"),
+        loggedIn: false,
+        isAdmin: false,
+        currentUser: null,
+        likes: new Set(LS.get("nuvara-likes", [])),
+        bookmarks: new Set(LS.get("nuvara-bookmarks", [])),
+        feedbackLog: LS.get("nuvara-feedback", []),
+      };
+
+      function simpleHash(s) {
+        let h = 0;
+        for (let i = 0; i < s.length; i++)
+          h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+        return h.toString(36);
+      }
+      function getUsers() {
+        return LS.get("nuvara-users", {});
+      }
+      function saveUsers(u) {
+        LS.set("nuvara-users", u);
+      }
+      function getComments(id) {
+        return LS.get("nuvara-comments-" + id, []);
+      }
+      function saveComments(id, c) {
+        LS.set("nuvara-comments-" + id, c);
+      }
+      function saveLikes() {
+        LS.set("nuvara-likes", [...state.likes]);
+      }
+      function saveBookmarks() {
+        LS.set("nuvara-bookmarks", [...state.bookmarks]);
+      }
+      function saveFeedback() {
+        LS.set("nuvara-feedback", state.feedbackLog);
+      }
+      function saveSession() {
+        state.loggedIn && state.currentUser
+          ? LS.set("nuvara-session", {
+              user: state.currentUser,
+              isAdmin: state.isAdmin,
+            })
+          : LS.del("nuvara-session");
+      }
+
+      // ─── ADMIN SETUP (Option C) ────────────────────────────────────
+      function needsSetup() {
+        return !LS.get("nuvara-admin-hash");
+      }
+
+      function showSetup() {
+        document.getElementById("setupOverlay").style.display = "flex";
+      }
+
+      function completeSetup() {
+        const u = document.getElementById("setupUser")?.value.trim();
+        const p = document.getElementById("setupPass")?.value;
+        const p2 = document.getElementById("setupPass2")?.value;
+        const errEl = document.getElementById("setupErr");
+        const showErr = (m) => {
+          errEl.textContent = m;
+          errEl.style.display = "block";
+        };
+
+        if (!/^[a-zA-Z0-9]{5,10}$/.test(u)) {
+          showErr("Username must be 5–10 letters and numbers.");
+          return;
+        }
+        if (!p || p.length < 8) {
+          showErr("Password must be at least 8 characters.");
+          return;
+        }
+        if (p !== p2) {
+          showErr("Passwords do not match.");
+          return;
+        }
+
+        // Store hashed credentials — admin username + password hash
+        LS.set("nuvara-admin-hash", {
+          usernameHash: simpleHash(u.toLowerCase()),
+          passwordHash: simpleHash(p),
+          username: u,
+        });
+        document.getElementById("setupOverlay").style.display = "none";
+        showToast("Admin account created! You can now sign in.");
+      }
+
+      function isAdminCredentials(username, password) {
+        const adminData = LS.get("nuvara-admin-hash");
+        if (!adminData) return false;
+        return (
+          simpleHash(username.toLowerCase()) === adminData.usernameHash &&
+          simpleHash(password) === adminData.passwordHash
+        );
+      }
+
+      function getAdminUsername() {
+        return LS.get("nuvara-admin-hash")?.username || "admin";
+      }
+
+      // ─── USERNAME VALIDATION ───────────────────────────────────────
+      function validateUsername(username) {
+        const c = (username || "").trim();
+        if (c.length < 5)
+          return { ok: false, msg: "Must be at least 5 characters." };
+        if (c.length > 10)
+          return { ok: false, msg: "Must be at most 10 characters." };
+        if (!/^[a-zA-Z0-9]+$/.test(c))
+          return { ok: false, msg: "Letters and numbers only." };
+        if (getUsers()[c.toLowerCase()])
+          return { ok: false, msg: "Username already taken." };
+        // Also check against admin username
+        const adminData = LS.get("nuvara-admin-hash");
+        if (adminData && simpleHash(c.toLowerCase()) === adminData.usernameHash)
+          return { ok: false, msg: "Username already taken." };
+        return { ok: true, msg: "✓ Available" };
+      }
+      function validateEmail(e) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((e || "").trim());
+      }
+      function liveUsernameCheck(input) {
+        const s = document.getElementById("usernameStatus");
+        if (!s) return;
+        const v = input.value.trim();
+        if (!v) {
+          s.innerHTML = "";
+          input.className = "";
+          return;
+        }
+        const r = validateUsername(v);
+        s.innerHTML = `<span style="color:${
+          r.ok ? "var(--success)" : "var(--error)"
+        }">${r.msg}</span>`;
+        input.className = r.ok ? "valid" : "invalid";
+      }
+
+      // ─── PAGE NAV ──────────────────────────────────────────────────
+      function showPage(name) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        const pg = document.getElementById("page-" + name);
+        if (pg) pg.classList.add("active");
+        document
+          .querySelectorAll(".nav-links a")
+          .forEach((a) =>
+            a.classList.toggle("active", a.dataset.page === name)
+          );
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (name === "admin") renderAdminTab(null, "overview");
+        if (name === "bookmarks") renderBookmarks();
+        if (name === "profile") renderProfile();
+      }
+
+      // ─── CARD BUILDERS ─────────────────────────────────────────────
+      function cardPlaceholder(tag) {
+        const palettes = {
+          Climate: "15,40,70",
+          "Mental Health": "30,35,75",
+          Education: "15,45,65",
+          Environment: "15,50,35",
+          "Human Rights": "55,20,40",
+          Technology: "20,35,70",
+          Migration: "40,35,20",
+          Community: "20,40,55",
+          Resilience: "35,20,55",
+          Courage: "55,35,15",
+          Identity: "20,50,55",
+          "Loss & Hope": "35,20,50",
+          Documentary: "10,25,50",
+          "Short Film": "20,20,40",
+          Interview: "20,35,40",
+          Animation: "20,35,20",
+          Report: "20,20,35",
+          Story: "35,20,35",
+        };
+        const rgb = palettes[tag] || "17,24,39";
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" style="width:100%;height:100%;position:absolute;inset:0;display:block">
+    <rect width="400" height="225" fill="rgb(${rgb})"/>
+    <line x1="0" y1="225" x2="400" y2="0" stroke="rgba(78,205,196,0.07)" stroke-width="70"/>
+    <line x1="0" y1="310" x2="400" y2="85" stroke="rgba(78,205,196,0.04)" stroke-width="50"/>
+    <rect x="24" y="22" width="56" height="2.5" rx="1.25" fill="rgba(78,205,196,0.4)"/>
+    <rect x="24" y="32" width="38" height="2.5" rx="1.25" fill="rgba(78,205,196,0.22)"/>
+    <rect x="24" y="168" width="130" height="2.5" rx="1.25" fill="rgba(255,255,255,0.13)"/>
+    <rect x="24" y="178" width="90" height="2.5" rx="1.25" fill="rgba(255,255,255,0.08)"/>
+    <rect x="24" y="188" width="110" height="2.5" rx="1.25" fill="rgba(255,255,255,0.06)"/>
+    <circle cx="344" cy="182" r="30" fill="none" stroke="rgba(78,205,196,0.12)" stroke-width="1"/>
+    <circle cx="344" cy="182" r="20" fill="none" stroke="rgba(78,205,196,0.08)" stroke-width="1"/>
+  </svg>`;
+      }
+
+      function videoPlaceholder(tag) {
+        const palettes = {
+          Documentary: "10,20,40",
+          "Short Film": "18,18,35",
+          Interview: "18,30,35",
+          Animation: "18,30,18",
+          Report: "18,18,30",
+          Story: "30,18,30",
+        };
+        const rgb = palettes[tag] || "10,20,35";
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" style="width:100%;height:100%;position:absolute;inset:0;display:block">
+    <rect width="400" height="225" fill="rgb(${rgb})"/>
+    <line x1="0" y1="225" x2="400" y2="0" stroke="rgba(78,205,196,0.06)" stroke-width="60"/>
+    <rect x="24" y="22" width="50" height="2.5" rx="1.25" fill="rgba(78,205,196,0.35)"/>
+    <rect x="24" y="32" width="34" height="2.5" rx="1.25" fill="rgba(78,205,196,0.2)"/>
+    <rect x="24" y="180" width="110" height="2.5" rx="1.25" fill="rgba(255,255,255,0.1)"/>
+    <rect x="24" y="190" width="80" height="2.5" rx="1.25" fill="rgba(255,255,255,0.07)"/>
+    <circle cx="344" cy="165" r="32" fill="rgba(78,205,196,0.07)" stroke="rgba(78,205,196,0.18)" stroke-width="1.5"/>
+    <polygon points="337,155 337,175 355,165" fill="rgba(78,205,196,0.4)"/>
+  </svg>`;
+      }
+
+      function makeCard(item) {
+        const liked = state.likes.has(item.id),
+          bm = state.bookmarks.has(item.id);
+        const cover = item.coverUrl
+          ? `<img src="${item.coverUrl}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" alt="${item.title}"/>`
+          : cardPlaceholder(item.tag || "");
+        return `<div class="card" onclick="openArticle(${JSON.stringify(
+          item.id
+        )})">
+    <div class="card-img" style="overflow:hidden;position:relative">${cover}</div>
+    <div class="card-body">
+      <div class="card-tag">${item.tag || ""}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-excerpt">${item.excerpt || ""}</div>
+      <div class="card-meta">
+        <span>${item.date || ""}</span>
+        ${
+          item.readTime
+            ? `<span class="read-time">⏱ ${item.readTime}</span>`
+            : ""
+        }
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="action-btn${
+            liked ? " liked" : ""
+          }" onclick="toggleLike(${JSON.stringify(
+          item.id
+        )},this)" title="Like">${liked ? ICONS.heartFill : ICONS.heart}</button>
+          <button class="action-btn${
+            bm ? " active" : ""
+          }" onclick="toggleBookmark(${JSON.stringify(
+          item.id
+        )},this)" title="Bookmark">${
+          bm ? ICONS.bookmarkFill : ICONS.bookmark
+        }</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+      }
+
+      function makeVideoCard(item) {
+        const liked = state.likes.has(item.id);
+        const thumb = item.thumbUrl
+          ? `<img src="${item.thumbUrl}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" alt="${item.title}"/>`
+          : videoPlaceholder(item.tag || "");
+        return `<div class="video-card" onclick="openLightbox(${JSON.stringify(
+          item.id
+        )})">
+    <div class="video-thumb" style="position:relative;overflow:hidden">
+      ${thumb}
+      <div class="play-btn"><div class="play-circle">${ICONS.play}</div></div>
+      <div class="video-duration">${item.duration || ""}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">${item.tag || ""}</div>
+      <div class="card-title" style="font-size:1rem">${item.title}</div>
+      <div class="card-meta">
+        <span>${(item.likes || 0).toLocaleString()} likes</span>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="action-btn${
+            liked ? " liked" : ""
+          }" onclick="toggleLike(${JSON.stringify(
+          item.id
+        )},this)" title="Like">${liked ? ICONS.heartFill : ICONS.heart}</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+      }
+
+      function makeThought(t) {
+        const liked = state.likes.has(t.id);
+        return `<div class="thought-item">
+    <div class="thought-text">"${t.text}"</div>
+    <div class="thought-meta">
+      <span>${t.date || ""}</span>
+      <button class="action-btn${
+        liked ? " liked" : ""
+      }" onclick="toggleLike(${JSON.stringify(
+          t.id
+        )},this)" style="width:auto;padding:0 .6rem;border-radius:20px;gap:.3rem">${
+          liked ? ICONS.heartFill : ICONS.heart
+        } ${t.likes || 0}</button>
+    </div>
+  </div>`;
+      }
+
+      function makeFilterChips(items, cid) {
+        const el = document.getElementById(cid);
+        if (!el) return;
+        const tags = [...new Set(items.map((i) => i.tag).filter(Boolean))];
+        el.innerHTML = ["All", ...tags]
+          .map(
+            (t, i) =>
+              `<div class="filter-chip${
+                i === 0 ? " active" : ""
+              }" onclick="filterChip(this,'${t}','${cid}')">${t}</div>`
+          )
+          .join("");
+      }
+      function filterChip(el, tag, cid) {
+        document
+          .querySelectorAll(`#${cid} .filter-chip`)
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      // ─── INIT ──────────────────────────────────────────────────────
+      function emptyState(icon, msg, sub = "") {
+        return `<div class="empty-state" style="grid-column:1/-1;padding:4rem 2rem">
+    <div style="width:56px;height:56px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">${icon}</div>
+    <p style="font-weight:500;color:var(--text);margin-bottom:.4rem">${msg}</p>
+    ${sub ? `<p style="font-size:.82rem;color:var(--muted)">${sub}</p>` : ""}
+  </div>`;
+      }
+
+      function renderFeatured() {
+        const el = document.getElementById("featuredBlock");
+        if (!el) return;
+        const featured =
+          DATA.articles.find((a) => a.featured) || DATA.articles[0];
+        if (!featured) {
+          el.innerHTML = `<div style="border:1px dashed var(--border2);border-radius:var(--rad);padding:3rem;text-align:center;color:var(--muted);margin-bottom:3rem">
+      <div style="font-family:var(--serif);font-size:1.2rem;margin-bottom:.5rem">No featured article yet</div>
+      <p style="font-size:.83rem">Publish an article from the admin dashboard to feature it here.</p>
+    </div>`;
+          return;
+        }
+        const cover = featured.coverUrl
+          ? `<img src="${featured.coverUrl}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${featured.title}"/>`
+          : cardPlaceholder(featured.tag || "");
+        el.innerHTML = `<div class="featured" onclick="openArticle(${JSON.stringify(
+          featured.id
+        )})" style="margin-bottom:3rem">
+    <div class="featured-img" style="position:relative;overflow:hidden">${cover}<div class="featured-img-overlay"></div></div>
+    <div class="featured-body">
+      <div class="featured-eyebrow">${
+        featured.type === "story" ? "Story" : "Article"
+      } · ${featured.tag || ""}</div>
+      <h2 class="featured-title">${featured.title}</h2>
+      <p class="featured-excerpt">${featured.excerpt || ""}</p>
+      <div class="featured-meta">
+        <span>By ${featured.author || "Nuvara Editorial"}</span>
+        ${
+          featured.readTime
+            ? `<span class="read-time">⏱ ${featured.readTime}</span>`
+            : ""
+        }
+        <span>${featured.date || ""}</span>
+      </div>
+    </div>
+  </div>`;
+      }
+
+      function initRender() {
+        DATA = loadDATA();
+        const qs = (id, items, makeFn, emptyMsg, emptySub) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.innerHTML = items.length
+            ? items.map(makeFn).join("")
+            : emptyState(
+                `<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.5;stroke-linecap:round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+                emptyMsg,
+                emptySub
+              );
+        };
+        renderFeatured();
+        qs(
+          "trendingGrid",
+          DATA.articles.slice(0, 3),
+          makeCard,
+          "No articles published yet",
+          "Sign in as admin to publish content."
+        );
+        qs(
+          "latestThoughts",
+          DATA.thoughts.slice(0, 3),
+          makeThought,
+          "No thoughts published yet",
+          ""
+        );
+        qs(
+          "homeVideos",
+          DATA.videos.slice(0, 4),
+          makeVideoCard,
+          "No videos added yet",
+          ""
+        );
+        qs(
+          "articlesGrid",
+          DATA.articles,
+          makeCard,
+          "No articles yet",
+          "The admin can publish articles from the dashboard."
+        );
+        qs(
+          "storiesGrid",
+          DATA.stories,
+          makeCard,
+          "No stories yet",
+          "The admin can publish stories from the dashboard."
+        );
+        qs(
+          "videosGrid",
+          DATA.videos,
+          makeVideoCard,
+          "No videos yet",
+          "The admin can add videos from the dashboard."
+        );
+        const thoughtEl = document.getElementById("allThoughts");
+        if (thoughtEl)
+          thoughtEl.innerHTML = DATA.thoughts.length
+            ? DATA.thoughts.map(makeThought).join("")
+            : `<div style="text-align:center;padding:4rem 2rem;color:var(--muted)"><p style="font-weight:500;color:var(--text);margin-bottom:.4rem">No thoughts yet</p><p style="font-size:.82rem">The admin can post reflections from the dashboard.</p></div>`;
+        const archEl = document.getElementById("archivesGrid");
+        const allContent = [...DATA.articles, ...DATA.stories].sort(
+          (a, b) => b.id - a.id
+        );
+        if (archEl)
+          archEl.innerHTML = allContent.length
+            ? allContent.map(makeCard).join("")
+            : emptyState(
+                `<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.5;stroke-linecap:round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/></svg>`,
+                "Archive is empty",
+                "Published content will appear here."
+              );
+        makeFilterChips(DATA.articles, "articleFilters");
+        makeFilterChips(allContent, "archiveFilters");
+      }
+
+      // ─── VIDEO LIGHTBOX ────────────────────────────────────────────
+      function openLightbox(id) {
+        const video = DATA.videos.find((v) => v.id == id);
+        if (!video) return;
+        const overlay = document.getElementById("lightboxOverlay");
+        const media = document.getElementById("lightboxMedia");
+        document.getElementById("lightboxTitle").textContent = video.title;
+        document.getElementById("lightboxTag").textContent = video.tag || "";
+
+        if (video.url) {
+          // YouTube / Vimeo embed
+          let embedUrl = video.url;
+          if (embedUrl.includes("youtube.com/watch")) {
+            const vid = new URL(embedUrl).searchParams.get("v");
+            embedUrl = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+          } else if (embedUrl.includes("youtu.be/")) {
+            const vid = embedUrl.split("youtu.be/")[1].split("?")[0];
+            embedUrl = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+          } else if (embedUrl.includes("vimeo.com/")) {
+            const vid = embedUrl.split("vimeo.com/")[1];
+            embedUrl = `https://player.vimeo.com/video/${vid}?autoplay=1`;
+          }
+          media.innerHTML = `<iframe class="lightbox-iframe" src="${embedUrl}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+        } else if (video.blobUrl) {
+          // Local file uploaded by admin
+          media.innerHTML = `<video class="lightbox-video" src="${video.blobUrl}" controls autoplay></video>`;
+        } else {
+          // Placeholder for seed videos (no actual file)
+          media.innerHTML = `<div style="aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface2);color:var(--muted);gap:1rem">
+      <div style="font-size:4rem">${video.emoji || "🎬"}</div>
+      <div style="font-size:.9rem">No video file attached to this entry.</div>
+      <div style="font-size:.78rem;opacity:.6">Admin can add a YouTube/Vimeo link in the dashboard.</div>
+    </div>`;
+        }
+        overlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox(e) {
+        if (
+          e &&
+          e.target !== document.getElementById("lightboxOverlay") &&
+          !e.target.closest(".lightbox-close")
+        )
+          return;
+        const overlay = document.getElementById("lightboxOverlay");
+        overlay.classList.remove("open");
+        document.getElementById("lightboxMedia").innerHTML = ""; // stop video playback
+        document.body.style.overflow = "";
+      }
+
+      // ─── ARTICLE VIEW ──────────────────────────────────────────────
+      let currentItemId = null;
+      function openArticle(id) {
+        const all = [...DATA.articles, ...DATA.stories];
+        const item =
+          id === "featured" ? DATA.articles[0] : all.find((a) => a.id == id);
+        if (!item) return;
+        currentItemId = item.id;
+        const liked = state.likes.has(item.id),
+          bm = state.bookmarks.has(item.id);
+        const comments = getComments(item.id);
+        document.getElementById("articleContent").innerHTML = `
+    <button onclick="history.back()" style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem;margin-bottom:2rem;cursor:pointer;background:none;border:none;font-family:var(--sans)">← Back</button>
+    <span class="article-tag">${item.tag || ""}</span>
+    <h1 class="article-title">${item.title}</h1>
+    <div class="article-meta">
+      <span>By ${item.author || "Nuvara Editorial"}</span><span>${
+          item.date || ""
+        }</span>
+      ${
+        item.readTime ? `<span class="read-time">⏱ ${item.readTime}</span>` : ""
+      }
+      <span>💬 ${comments.length} comment${
+          comments.length !== 1 ? "s" : ""
+        }</span>
+    </div>
+    <div class="article-body">${item.body || ARTICLE_BODY}</div>
+    <div class="article-actions">
+      <button class="article-action-btn${
+        liked ? " liked-btn" : ""
+      }" id="artLikeBtn" onclick="toggleLikeBtn(${JSON.stringify(
+          item.id
+        )},this)">
+        ${
+          liked
+            ? ICONS.heartFill.replace("14px", "15px")
+            : ICONS.heart.replace("14px", "15px")
+        } <span>${(item.likes || 0) + (liked ? 1 : 0)} Likes</span>
+      </button>
+      <button class="article-action-btn${
+        bm ? " active" : ""
+      }" id="artBmBtn" onclick="toggleBookmarkBtn(${JSON.stringify(
+          item.id
+        )},this)">
+        ${
+          bm
+            ? ICONS.bookmarkFill.replace("14px", "15px")
+            : ICONS.bookmark.replace("14px", "15px")
+        } <span>${bm ? "Saved" : "Save"}</span>
+      </button>
+      <button class="article-action-btn" onclick="copyShare()">${
+        ICONS.share
+      } <span>Share</span></button>
+    </div>
+    <div class="feedback-section" id="articleFeedback">
+      <h3 class="feedback-title">How did this ${
+        item.type === "story" ? "story" : "article"
+      } make you feel?</h3>
+      <p class="feedback-sub">Your honest reaction helps us commission better stories with purpose.</p>
+      <div class="feedback-stars" id="feedbackStars">
+        ${[1, 2, 3, 4, 5]
+          .map(
+            (n) =>
+              `<button class="star-btn" onclick="rateStar(${n})">★</button>`
+          )
+          .join("")}
+      </div>
+      <div class="feedback-types">
+        ${[
+          "Informative",
+          "Moving",
+          "Eye-opening",
+          "Important",
+          "Inspiring",
+          "Well-written",
+          "Too long",
+          "Needs sources",
+        ]
+          .map(
+            (t) =>
+              `<div class="feedback-tag" onclick="toggleFeedbackTag(this)">${t}</div>`
+          )
+          .join("")}
+      </div>
+      <textarea class="feedback-textarea" id="feedbackNote" placeholder="Any additional thoughts? (optional)"></textarea>
+      <button class="btn-primary" onclick="submitArticleFeedback(${JSON.stringify(
+        item.id
+      )})" style="font-size:.85rem">Submit Feedback</button>
+      <div class="feedback-submitted" id="feedbackDone"><div class="check">✅</div><strong>Thank you!</strong><p style="font-size:.82rem;color:var(--muted);margin-top:.3rem">Your feedback shapes what Nuvara publishes next.</p></div>
+    </div>
+    <div style="margin-top:2rem">
+      <h3 style="font-family:var(--serif);font-size:1.3rem;font-weight:300;margin-bottom:1rem" id="commentHeading">Comments <span style="color:var(--muted);font-size:.9rem">(${
+        comments.length
+      })</span></h3>
+      ${
+        state.loggedIn
+          ? `<div style="display:flex;gap:.75rem;margin-bottom:1.5rem">
+            <div class="avatar" style="flex-shrink:0;width:34px;height:34px;font-size:.7rem">${getInitials()}</div>
+            <input id="commentInput" placeholder="Share your thoughts…" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rad-sm);padding:.75rem 1rem;color:var(--text);font-size:.9rem;outline:none;font-family:var(--sans)" onfocus="this.style.borderColor='var(--border2)'" onblur="this.style.borderColor='var(--border)'" onkeydown="if(event.key==='Enter')submitComment(this,${JSON.stringify(
+              item.id
+            )})"/>
+          </div>`
+          : `<p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem"><a onclick="openModal('login')" style="color:var(--cyan);cursor:pointer">Sign in</a> to join the discussion.</p>`
+      }
+      <div id="commentList">${renderComments(comments, item.id)}</div>
+    </div>`;
+        showPage("article");
+      }
+
+      function renderComments(comments, itemId) {
+        if (!comments.length)
+          return `<p style="color:var(--muted);font-size:.85rem">No comments yet. Be the first.</p>`;
+        return comments
+          .map(
+            (c) => `
+    <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)">
+      <div class="avatar" style="width:34px;height:34px;font-size:.7rem;flex-shrink:0">${
+        c.initials
+      }</div>
+      <div style="flex:1">
+        <div style="font-size:.8rem;font-weight:500;margin-bottom:.3rem">${
+          c.username
+        } <span style="color:var(--muted);font-weight:400">${
+              c.time
+            }</span></div>
+        <div style="font-size:.88rem;color:var(--text2);line-height:1.6">${
+          c.body
+        }</div>
+        ${
+          state.isAdmin
+            ? `<button onclick="adminDeleteComment('${c.id}',${JSON.stringify(
+                itemId
+              )})" style="font-size:.72rem;color:var(--error);margin-top:.4rem;cursor:pointer;background:none;border:none;display:flex;align-items:center;gap:.3rem">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>Remove</button>`
+            : ""
+        }
+      </div>
+    </div>`
+          )
+          .join("");
+      }
+
+      function getInitials() {
+        return state.currentUser
+          ? state.currentUser.username.slice(0, 2).toUpperCase()
+          : "?";
+      }
+
+      function submitComment(input, itemId) {
+        if (!input.value.trim()) return;
+        const comments = getComments(itemId);
+        comments.unshift({
+          id: Date.now().toString(),
+          username: state.currentUser.username,
+          initials: getInitials(),
+          body: input.value.trim(),
+          time: "Just now",
+          ts: new Date().toISOString(),
+        });
+        saveComments(itemId, comments);
+        input.value = "";
+        const list = document.getElementById("commentList");
+        const heading = document.getElementById("commentHeading");
+        if (list) list.innerHTML = renderComments(comments, itemId);
+        if (heading)
+          heading.innerHTML = `Comments <span style="color:var(--muted);font-size:.9rem">(${comments.length})</span>`;
+        showToast("Comment posted");
+      }
+
+      function adminDeleteComment(cid, itemId) {
+        const comments = getComments(itemId).filter((c) => c.id !== cid);
+        saveComments(itemId, comments);
+        const list = document.getElementById("commentList");
+        if (list) list.innerHTML = renderComments(comments, itemId);
+        showToast("Comment removed");
+      }
+
+      function copyShare() {
+        navigator.clipboard?.writeText(location.href).catch(() => {});
+        showToast("Link copied!");
+      }
+
+      // ─── FEEDBACK ──────────────────────────────────────────────────
+      let selectedRating = 0;
+      function rateStar(n) {
+        selectedRating = n;
+        document
+          .querySelectorAll("#feedbackStars .star-btn")
+          .forEach((b, i) => {
+            b.classList.toggle("active", i < n);
+            b.style.color = i < n ? "var(--gold)" : "#555";
+          });
+      }
+      function toggleFeedbackTag(el) {
+        el.classList.toggle("selected");
+      }
+      function submitArticleFeedback(itemId) {
+        const tags = [
+          ...document.querySelectorAll(".feedback-tag.selected"),
+        ].map((el) => el.textContent);
+        const note = document.getElementById("feedbackNote")?.value.trim();
+        state.feedbackLog.push({
+          itemId,
+          rating: selectedRating,
+          tags,
+          note,
+          ts: new Date().toISOString(),
+        });
+        saveFeedback();
+        const section = document.getElementById("articleFeedback");
+        if (section)
+          section
+            .querySelectorAll("button,textarea,.feedback-tag")
+            .forEach((el) => (el.disabled = true));
+        const done = document.getElementById("feedbackDone");
+        if (done) done.style.display = "block";
+        showToast("Feedback received — thank you!");
+      }
+      function quickFeedback(btn, emoji) {
+        const row = btn.closest(".feedback-emoji-row");
+        if (row)
+          row.querySelectorAll(".emoji-btn").forEach((b) => {
+            b.style.opacity = ".3";
+            b.disabled = true;
+          });
+        btn.style.opacity = "1";
+        btn.style.transform = "scale(1.3)";
+        state.feedbackLog.push({
+          emoji,
+          page: document.querySelector(".page.active")?.id,
+          ts: new Date().toISOString(),
+        });
+        saveFeedback();
+        showToast(`Feedback recorded ${emoji}`);
+      }
+
+      // ─── LIKES ─────────────────────────────────────────────────────
+      function requireLogin() {
+        if (!state.loggedIn) {
+          openModal("login");
+          return false;
+        }
+        return true;
+      }
+      function toggleLike(id, btn) {
+        if (!requireLogin()) return;
+        state.likes.has(id) ? state.likes.delete(id) : state.likes.add(id);
+        const on = state.likes.has(id);
+        btn.innerHTML = on ? ICONS.heartFill : ICONS.heart;
+        btn.className = `action-btn${on ? " liked" : ""}`;
+        saveLikes();
+      }
+      function toggleLikeBtn(id, btn) {
+        if (!requireLogin()) return;
+        state.likes.has(id) ? state.likes.delete(id) : state.likes.add(id);
+        const on = state.likes.has(id);
+        btn.className = `article-action-btn${on ? " liked-btn" : ""}`;
+        btn.innerHTML = `${
+          on
+            ? ICONS.heartFill.replace("14px", "15px")
+            : ICONS.heart.replace("14px", "15px")
+        } <span>${on ? "Liked" : "Like"}</span>`;
+        saveLikes();
+      }
+
+      // ─── BOOKMARKS ─────────────────────────────────────────────────
+      function toggleBookmark(id, btn) {
+        if (!requireLogin()) return;
+        state.bookmarks.has(id)
+          ? state.bookmarks.delete(id)
+          : state.bookmarks.add(id);
+        const on = state.bookmarks.has(id);
+        btn.innerHTML = on ? ICONS.bookmarkFill : ICONS.bookmark;
+        btn.className = `action-btn${on ? " active" : ""}`;
+        showToast(on ? "Saved to bookmarks" : "Removed from bookmarks");
+        saveBookmarks();
+      }
+      function toggleBookmarkBtn(id, btn) {
+        if (!requireLogin()) return;
+        state.bookmarks.has(id)
+          ? state.bookmarks.delete(id)
+          : state.bookmarks.add(id);
+        const on = state.bookmarks.has(id);
+        btn.className = `article-action-btn${on ? " active" : ""}`;
+        btn.innerHTML = `${
+          on
+            ? ICONS.bookmarkFill.replace("14px", "15px")
+            : ICONS.bookmark.replace("14px", "15px")
+        } <span>${on ? "Saved" : "Save"}</span>`;
+        showToast(on ? "Saved to bookmarks" : "Removed");
+        saveBookmarks();
+      }
+
+      function renderBookmarks() {
+        const el = document.getElementById("bookmarksContent");
+        const saved = [...DATA.articles, ...DATA.stories].filter((i) =>
+          state.bookmarks.has(i.id)
+        );
+        el.innerHTML = saved.length
+          ? `<div class="card-grid card-grid-3">${saved
+              .map(makeCard)
+              .join("")}</div>`
+          : `<div class="empty-state"><div class="empty-icon">🔖</div><p>No bookmarks yet.<br>Save articles and stories to revisit them here.</p></div>`;
+      }
+
+      function renderProfile() {
+        if (!state.currentUser) return;
+        const u = state.currentUser;
+        document.getElementById("profileName").textContent = u.username;
+        document.getElementById(
+          "profileBio"
+        ).textContent = `${u.email} · Joined Nuvara`;
+        document.getElementById("profileAvatar").textContent = getInitials();
+        switchProfileTab(
+          document.querySelector(".profile-tab.active"),
+          "liked"
+        );
+      }
+
+      function switchProfileTab(el, tab) {
+        document
+          .querySelectorAll(".profile-tab")
+          .forEach((t) => t.classList.remove("active"));
+        if (el) el.classList.add("active");
+        const content = document.getElementById("profileTabContent");
+        if (tab === "liked") {
+          const liked = [...DATA.articles, ...DATA.stories].filter((i) =>
+            state.likes.has(i.id)
+          );
+          content.innerHTML = liked.length
+            ? `<div class="card-grid card-grid-3">${liked
+                .map(makeCard)
+                .join("")}</div>`
+            : `<div class="empty-state"><div class="empty-icon">❤️</div><p>No liked content yet.</p></div>`;
+        } else if (tab === "settings") {
+          const u = state.currentUser;
+          content.innerHTML = `<div style="max-width:480px">
+      <h3 style="font-family:var(--serif);font-size:1.4rem;font-weight:300;margin-bottom:1.5rem">Account Settings</h3>
+      <div class="field"><label>Username</label><input type="text" value="${
+        u.username
+      }" readonly style="opacity:.7"/><div class="field-hint">Username cannot be changed.</div></div>
+      <div class="field"><label>Email</label><input type="email" id="settingsEmail" value="${
+        u.email
+      }"/></div>
+      <div class="field"><label>Notification Preference</label>
+        <select id="settingsNotif" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rad-sm);color:var(--text);padding:.6rem .85rem;outline:none">
+          <option ${
+            u.notify !== "weekly" && u.notify !== "none" ? "selected" : ""
+          }>Email me when new content is published</option>
+          <option value="weekly" ${
+            u.notify === "weekly" ? "selected" : ""
+          }>Weekly digest only</option>
+          <option value="none" ${
+            u.notify === "none" ? "selected" : ""
+          }>No notifications</option>
+        </select>
+      </div>
+      <div class="field"><label>New Password (leave blank to keep current)</label><input type="password" id="settingsPass" placeholder="At least 6 characters"/></div>
+      <button class="btn-primary" style="margin-top:.5rem" onclick="saveSettings()">Save Changes</button>
+      <button class="btn-outline" style="margin-left:1rem;margin-top:.5rem" onclick="doLogout()">Log Out</button>
+    </div>`;
+        }
+      }
+
+      function saveSettings() {
+        const email = document.getElementById("settingsEmail")?.value.trim();
+        const notif = document.getElementById("settingsNotif")?.value;
+        const pass = document.getElementById("settingsPass")?.value;
+        if (email && !validateEmail(email)) {
+          showToast("Please enter a valid email.");
+          return;
+        }
+        const users = getUsers();
+        const key = state.currentUser.username.toLowerCase();
+        if (users[key]) {
+          if (email) users[key].email = email;
+          if (notif) users[key].notify = notif;
+          if (pass && pass.length >= 6)
+            users[key].passwordHash = simpleHash(pass);
+          saveUsers(users);
+          state.currentUser = {
+            ...state.currentUser,
+            email: email || state.currentUser.email,
+            notify: notif,
+          };
+          saveSession();
+        }
+        showToast("Settings saved ✓");
+      }
+
+      // ─── AUTH ──────────────────────────────────────────────────────
+      function openModal(type) {
+        document.getElementById("authModal").classList.add("open");
+        const c = document.getElementById("modalContent");
+        if (type === "login") {
+          c.innerHTML = `<h2 class="modal-title">Welcome back</h2><p class="modal-sub">Sign in to like, bookmark, and comment.</p>
+      <div class="field"><label>Username or Email</label><input type="text" id="loginId" placeholder="username or you@example.com"/></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+      <div id="loginErr" style="font-size:.78rem;color:var(--error);margin-bottom:.75rem;display:none"></div>
+      <button class="btn-primary" style="width:100%;padding:.75rem;font-size:.9rem" onclick="doLogin()">Sign In</button>
+      <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Join Nuvara</a><br><a onclick="openModal('reset')" style="color:var(--muted)">Forgot password?</a></div>`;
+        } else if (type === "signup") {
+          c.innerHTML = `<h2 class="modal-title">Join Nuvara</h2><p class="modal-sub">Create your account to engage with stories that matter.</p>
+      <div class="field"><label>Username</label><input type="text" id="signupUsername" placeholder="5–10 letters & numbers" oninput="liveUsernameCheck(this)" maxlength="10" autocomplete="off"/>
+        <div class="username-status" id="usernameStatus"></div>
+        <div class="field-hint">5–10 characters, letters and numbers only.</div>
+        <div class="field-error" id="usernameErr"></div>
+      </div>
+      <div class="field"><label>Email <span style="color:var(--cyan);font-size:.7rem">— for notifications</span></label>
+        <input type="email" id="signupEmail" placeholder="you@example.com"/>
+        <div class="field-error" id="emailErr"></div>
+      </div>
+      <div class="field"><label>Password</label><input type="password" id="signupPass" placeholder="At least 6 characters"/></div>
+      <div class="field"><label>Confirm Password</label><input type="password" id="signupPass2" placeholder="Repeat password"/>
+        <div class="field-error" id="passErr"></div>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:.75rem;font-size:.9rem;margin-top:.5rem" onclick="doSignup()">Create Account</button>
+      <div class="modal-footer">Already have an account? <a onclick="openModal('login')">Sign in</a></div>`;
+        } else if (type === "reset") {
+          c.innerHTML = `<h2 class="modal-title">Reset Password</h2><p class="modal-sub">Enter your email and new password.</p>
+      <div class="field"><label>Email</label><input type="email" id="resetEmail" placeholder="you@example.com"/></div>
+      <div class="field"><label>New Password</label><input type="password" id="resetPass" placeholder="At least 6 characters"/></div>
+      <button class="btn-primary" style="width:100%;padding:.75rem;font-size:.9rem;margin-top:.5rem" onclick="doReset()">Reset Password</button>
+      <div class="modal-footer"><a onclick="openModal('login')">← Back to sign in</a></div>`;
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("authModal").classList.remove("open");
+      }
+      function closeModalOutside(e) {
+        if (e.target === document.getElementById("authModal")) closeModal();
+      }
+
+      function doLogin() {
+        const id = document.getElementById("loginId")?.value.trim();
+        const pass = document.getElementById("loginPass")?.value;
+        const errEl = document.getElementById("loginErr");
+        const showErr = (m) => {
+          errEl.textContent = m;
+          errEl.style.display = "block";
+        };
+        errEl.style.display = "none";
+        if (!id || !pass) {
+          showErr("Please fill in all fields.");
+          return;
+        }
+
+        // Check admin credentials (username-based, not email)
+        if (isAdminCredentials(id, pass)) {
+          state.loggedIn = true;
+          state.isAdmin = true;
+          state.currentUser = {
+            username: getAdminUsername(),
+            email: "admin@nuvara.com",
+          };
+          closeModal();
+          onLoginSuccess();
+          saveSession();
+          showToast("Welcome, Admin! ⚡");
+          return;
+        }
+
+        // Check regular users by email or username
+        const users = getUsers();
+        const user = validateEmail(id)
+          ? Object.values(users).find((u) => u.email === id.toLowerCase())
+          : users[id.toLowerCase()];
+        if (!user) {
+          showErr("No account found. Please sign up.");
+          return;
+        }
+        if (user.passwordHash !== simpleHash(pass)) {
+          showErr("Incorrect password.");
+          return;
+        }
+        state.loggedIn = true;
+        state.isAdmin = false;
+        state.currentUser = {
+          username: user.username,
+          email: user.email,
+          notify: user.notify,
+        };
+        closeModal();
+        onLoginSuccess();
+        saveSession();
+        showToast(`Welcome back, ${user.username}!`);
+      }
+
+      function doSignup() {
+        const username = document
+          .getElementById("signupUsername")
+          ?.value.trim();
+        const email = document
+          .getElementById("signupEmail")
+          ?.value.trim()
+          .toLowerCase();
+        const pass = document.getElementById("signupPass")?.value;
+        const pass2 = document.getElementById("signupPass2")?.value;
+        let valid = true;
+        const setErr = (id, msg) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.textContent = msg;
+            el.style.display = msg ? "block" : "none";
+          }
+        };
+        const uResult = validateUsername(username);
+        if (!uResult.ok) {
+          setErr("usernameErr", uResult.msg);
+          valid = false;
+        } else {
+          setErr("usernameErr", "");
+        }
+        if (!validateEmail(email)) {
+          setErr("emailErr", "Please enter a valid email address.");
+          valid = false;
+        } else {
+          const emailTaken = Object.values(getUsers()).some(
+            (u) => u.email === email
+          );
+          if (emailTaken) {
+            setErr("emailErr", "Email already registered.");
+            valid = false;
+          } else {
+            setErr("emailErr", "");
+          }
+        }
+        if (!pass || pass.length < 6) {
+          setErr("passErr", "Password must be at least 6 characters.");
+          valid = false;
+        } else if (pass !== pass2) {
+          setErr("passErr", "Passwords do not match.");
+          valid = false;
+        } else {
+          setErr("passErr", "");
+        }
+        if (!valid) return;
+        const users = getUsers();
+        users[username.toLowerCase()] = {
+          username,
+          email,
+          passwordHash: simpleHash(pass),
+          notify: "all",
+          createdAt: new Date().toISOString(),
+        };
+        saveUsers(users);
+        state.loggedIn = true;
+        state.isAdmin = false;
+        state.currentUser = { username, email, notify: "all" };
+        closeModal();
+        onLoginSuccess();
+        saveSession();
+        showToast(`Welcome to Nuvara, ${username}! 🎉`);
+      }
+
+      function doReset() {
+        const email = document
+          .getElementById("resetEmail")
+          ?.value.trim()
+          .toLowerCase();
+        const pass = document.getElementById("resetPass")?.value;
+        if (!validateEmail(email)) {
+          showToast("Enter a valid email.");
+          return;
+        }
+        if (!pass || pass.length < 6) {
+          showToast("Password must be at least 6 characters.");
+          return;
+        }
+        const users = getUsers();
+        const key = Object.keys(users).find((k) => users[k].email === email);
+        if (!key) {
+          showToast("No account found with that email.");
+          return;
+        }
+        users[key].passwordHash = simpleHash(pass);
+        saveUsers(users);
+        closeModal();
+        showToast("Password reset! You can now sign in.");
+      }
+
+      function onLoginSuccess() {
+        document.getElementById("navAuth").style.display = "none";
+        document.getElementById("navUser").style.display = "flex";
+        document.getElementById("userAvatar").textContent = getInitials();
+        if (state.isAdmin && !document.getElementById("adminNavLink")) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            '<a href="#" id="adminNavLink" onclick="showPage(\'admin\')" data-page="admin" style="color:var(--cyan)">Admin</a>';
+          document.getElementById("navLinks").appendChild(li);
+        }
+        initRender();
+      }
+
+      function doLogout() {
+        state.loggedIn = false;
+        state.isAdmin = false;
+        state.currentUser = null;
+        LS.del("nuvara-session");
+        document.getElementById("navAuth").style.display = "";
+        document.getElementById("navUser").style.display = "none";
+        const al = document.getElementById("adminNavLink");
+        if (al) al.closest("li").remove();
+        showPage("home");
+        showToast("Signed out successfully.");
+        initRender();
+      }
+
+      // ─── SEARCH ────────────────────────────────────────────────────
+      function toggleSearch() {
+        const o = document.getElementById("searchOverlay");
+        o.classList.toggle("open");
+        if (o.classList.contains("open")) {
+          document.getElementById("searchInput").value = "";
+          document.getElementById("searchResults").innerHTML = "";
+          setTimeout(() => document.getElementById("searchInput").focus(), 80);
+        }
+      }
+      function handleSearch(q) {
+        const el = document.getElementById("searchResults");
+        if (!q.trim()) {
+          el.innerHTML = "";
+          return;
+        }
+        const pool = [
+          ...DATA.articles,
+          ...DATA.stories,
+          ...DATA.thoughts.map((t) => ({
+            ...t,
+            type: "thought",
+            title: t.text.slice(0, 55) + "…",
+            tag: "Thought",
+          })),
+        ];
+        const res = pool.filter(
+          (i) =>
+            (i.title || "").toLowerCase().includes(q.toLowerCase()) ||
+            (i.tag || "").toLowerCase().includes(q.toLowerCase()) ||
+            (i.excerpt || "").toLowerCase().includes(q.toLowerCase())
+        );
+        const iconMap = {
+          article: ICONS.article,
+          story: ICONS.story,
+          thought: ICONS.thought,
+          video: ICONS.video,
+        };
+        el.innerHTML = res.length
+          ? res
+              .slice(0, 6)
+              .map(
+                (i) =>
+                  `<div class="search-result-item" onclick="searchGo(${JSON.stringify(
+                    i.id
+                  )})">${iconMap[i.type] || ""}<div><div class="sr-type">${
+                    i.type
+                  } · ${i.tag || ""}</div><div class="sr-title">${
+                    i.title
+                  }</div></div></div>`
+              )
+              .join("")
+          : '<p style="color:var(--muted);font-size:.9rem;padding:1rem 1.25rem">No results found.</p>';
+      }
+      function searchGo(id) {
+        toggleSearch();
+        openArticle(id);
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document.getElementById("searchOverlay").classList.remove("open");
+          closeModal();
+          closeLightbox();
+        }
+      });
+
+      // ─── THEME ─────────────────────────────────────────────────────
+      function toggleTheme() {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", state.theme);
+        const icon = document.getElementById("themeIcon");
+        if (icon)
+          icon.innerHTML =
+            state.theme === "dark"
+              ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+              : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+        LS.set("nuvara-theme", state.theme);
+      }
+
+      // ─── ADMIN ─────────────────────────────────────────────────────
+      function adminTab(e, tab) {
+        document
+          .querySelectorAll(".admin-nav-item")
+          .forEach((el) => el.classList.remove("active"));
+        if (e && e.currentTarget) e.currentTarget.classList.add("active");
+        renderAdminTab(null, tab);
+      }
+
+      function renderAdminTab(_, tab) {
+        const el = document.getElementById("adminMain");
+        if (!el) return;
+        const cA = LS.get("nuvara-custom-articles", []);
+        const cS = LS.get("nuvara-custom-stories", []);
+        const cV = LS.get("nuvara-custom-videos", []);
+        const cT = LS.get("nuvara-custom-thoughts", []);
+        const allUsers = getUsers();
+
+        if (tab === "overview") {
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Dashboard</h2><span style="font-size:.8rem;color:var(--muted)">${new Date().toLocaleDateString()}</span></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Articles</div><div class="stat-value">${
+        SEED.articles.length + cA.length
+      }</div><div class="stat-change">+${cA.length} added</div></div>
+      <div class="stat-card"><div class="stat-label">Stories</div><div class="stat-value">${
+        SEED.stories.length + cS.length
+      }</div><div class="stat-change">+${cS.length} added</div></div>
+      <div class="stat-card"><div class="stat-label">Videos</div><div class="stat-value">${
+        SEED.videos.length + cV.length
+      }</div><div class="stat-change">+${cV.length} added</div></div>
+      <div class="stat-card"><div class="stat-label">Thoughts</div><div class="stat-value">${
+        SEED.thoughts.length + cT.length
+      }</div><div class="stat-change">+${cT.length} added</div></div>
+      <div class="stat-card"><div class="stat-label">Registered Users</div><div class="stat-value">${
+        Object.keys(allUsers).length
+      }</div></div>
+      <div class="stat-card"><div class="stat-label">Feedback Entries</div><div class="stat-value">${
+        state.feedbackLog.length
+      }</div></div>
+    </div>
+    <h3 style="font-size:1rem;font-weight:500;margin-bottom:1rem">Your Published Content</h3>
+    ${
+      [...cA, ...cS, ...cT].length
+        ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
+      <table class="admin-table"><thead><tr><th>Title</th><th>Type</th><th>Tag</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+      ${[...cA, ...cS, ...cT]
+        .map(
+          (i) => `<tr>
+        <td>${(i.title || i.text || "").slice(0, 38)}…</td>
+        <td style="color:var(--muted);text-transform:capitalize">${i.type}</td>
+        <td><span style="font-size:.7rem;color:var(--cyan)">${
+          i.tag || "—"
+        }</span></td>
+        <td style="color:var(--muted)">${i.date || "Today"}</td>
+        <td><button class="btn-icon" style="width:28px;height:28px" onclick="adminDeleteContent(${JSON.stringify(
+          i.id
+        )},'${i.type}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button></td></tr>`
+        )
+        .join("")}
+      </tbody></table></div>`
+        : `<p style="color:var(--muted);font-size:.85rem">No custom content yet. Use the sidebar to create articles, stories, videos, or thoughts.</p>`
+    }`;
+        } else if (tab === "upload" || tab === "story") {
+          const label = tab === "upload" ? "Article" : "Story",
+            type = tab === "upload" ? "article" : "story";
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">New ${label}</h2></div>
+    <div class="upload-area"><input type="file" accept="image/*" onchange="previewCoverImage(this)"/>
+      <div class="upload-icon">🖼️</div><div style="font-weight:500;margin-bottom:.3rem">Cover Image (optional)</div>
+      <div style="font-size:.8rem">Click to browse — JPG, PNG, WebP</div>
+    </div>
+    <div id="coverPreview" style="display:none;margin-bottom:1.5rem;border-radius:var(--rad);overflow:hidden;max-height:220px"><img id="coverImg" style="width:100%;object-fit:cover;max-height:220px"/></div>
+    <div class="form-row">
+      <div class="admin-field"><label>Title</label><input type="text" id="newTitle" placeholder="${label} title…"/></div>
+      <div class="admin-field"><label>Category / Tag</label>
+        <select id="newTag"><option>Climate</option><option>Mental Health</option><option>Education</option><option>Human Rights</option><option>Technology</option><option>Environment</option><option>Migration</option><option>Community</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="admin-field"><label>Author</label><input type="text" id="newAuthor" value="${
+        state.currentUser?.username || ""
+      }"/></div>
+      <div class="admin-field"><label>Read Time</label><input type="text" id="newReadTime" placeholder="e.g. 5 min"/></div>
+    </div>
+    <div class="admin-field" style="margin-bottom:1rem"><label>Excerpt</label><textarea id="newExcerpt" placeholder="Short summary shown on cards…"></textarea></div>
+    <div class="admin-field" style="margin-bottom:1rem"><label>Full Content</label><textarea id="newBody" style="min-height:200px" placeholder="Write your ${label.toLowerCase()} here…"></textarea></div>
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button class="btn-primary" onclick="publishContent('${type}')">Publish Now</button>
+      <button class="btn-outline" onclick="showToast('Draft saving coming soon')">Save Draft</button>
+    </div>`;
+        } else if (tab === "video") {
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Add Video</h2></div>
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:1.5rem">Paste a YouTube/Vimeo URL for streaming, or upload a local file. Both will open in a lightbox when viewers click.</p>
+    <div class="admin-field" style="margin-bottom:1rem"><label>YouTube / Vimeo URL</label>
+      <input type="url" id="videoUrl" placeholder="https://youtube.com/watch?v=…"/>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:.8rem;margin:.5rem 0 1rem">— or upload a local file —</div>
+    <div class="upload-area" id="videoDropZone">
+      <input type="file" id="videoFileInput" accept="video/mp4,video/quicktime,video/webm" onchange="handleVideoUpload(this)"/>
+      <div class="upload-icon">🎬</div>
+      <div style="font-weight:500;margin-bottom:.3rem">Click to select video file</div>
+      <div style="font-size:.8rem">MP4, MOV, WebM — plays directly in the lightbox</div>
+    </div>
+    <div class="upload-progress" id="uploadProgress">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)"><span id="uploadFilename">Loading…</span><span id="uploadPct">0%</span></div>
+      <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div>
+    </div>
+    <div class="video-preview-wrap" id="videoPreviewWrap"><video id="videoPreviewEl" controls></video></div>
+    <div class="form-row" style="margin-top:1rem">
+      <div class="admin-field"><label>Title</label><input type="text" id="videoTitle" placeholder="Video title…"/></div>
+      <div class="admin-field"><label>Category</label>
+        <select id="videoCategory"><option>Documentary</option><option>Short Film</option><option>Interview</option><option>Animation</option><option>Report</option></select>
+      </div>
+    </div>
+    <div class="admin-field" style="margin-bottom:1.25rem"><label>Duration (e.g. 12:34)</label><input type="text" id="videoDuration" placeholder="00:00"/></div>
+    <div style="display:flex;gap:1rem">
+      <button class="btn-primary" onclick="publishVideo()">Add Video</button>
+    </div>`;
+        } else if (tab === "thought") {
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">New Thought</h2></div>
+    <div class="admin-field" style="margin-bottom:.5rem">
+      <label>Reflection <span id="thoughtCount" style="color:var(--muted);font-weight:300">0 / 280</span></label>
+      <textarea id="thoughtText" style="min-height:160px;font-family:var(--serif);font-style:italic;font-size:1.1rem" placeholder="Share a short, powerful reflection…" oninput="document.getElementById('thoughtCount').textContent=this.value.length+' / 280';if(this.value.length>280)this.value=this.value.slice(0,280)"></textarea>
+    </div>
+    <button class="btn-primary" onclick="publishThought()">Post Thought</button>`;
+        } else if (tab === "comments") {
+          const allKeys = Object.keys(localStorage).filter((k) =>
+            k.startsWith("nuvara-comments-")
+          );
+          const allComments = allKeys.flatMap((k) => {
+            const itemId = k.replace("nuvara-comments-", "");
+            const all2 = [...DATA.articles, ...DATA.stories];
+            const item = all2.find((i) => String(i.id) === itemId);
+            return LS.get(k, []).map((c) => ({
+              ...c,
+              itemTitle: item?.title || "Unknown",
+              itemId,
+            }));
+          });
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Comment Moderation</h2></div>
+    ${
+      allComments.length
+        ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
+      <table class="admin-table"><thead><tr><th>User</th><th>Comment</th><th>Article</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+      ${allComments
+        .map(
+          (c) => `<tr>
+        <td style="font-weight:500">${c.username}</td>
+        <td style="color:var(--muted)">${c.body.slice(0, 60)}${
+            c.body.length > 60 ? "…" : ""
+          }</td>
+        <td style="color:var(--muted);font-size:.8rem">${c.itemTitle.slice(
+          0,
+          30
+        )}</td>
+        <td style="color:var(--muted)">${new Date(
+          c.ts
+        ).toLocaleDateString()}</td>
+        <td><button class="btn-icon" style="width:28px;height:28px" onclick="adminDeleteComment('${
+          c.id
+        }',${JSON.stringify(c.itemId)});renderAdminTab(null,'comments')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button></td></tr>`
+        )
+        .join("")}
+      </tbody></table></div>`
+        : `<div class="empty-state"><div class="empty-icon">💬</div><p>No comments yet.</p></div>`
+    }`;
+        } else if (tab === "feedback") {
+          const logs = state.feedbackLog;
+          const ratings = logs.filter((l) => l.rating);
+          const avg = ratings.length
+            ? (
+                ratings.reduce((a, b) => a + b.rating, 0) / ratings.length
+              ).toFixed(1)
+            : "—";
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Reader Feedback</h2></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total Responses</div><div class="stat-value">${
+        logs.length
+      }</div></div>
+      <div class="stat-card"><div class="stat-label">Avg Star Rating</div><div class="stat-value">${avg}</div></div>
+      <div class="stat-card"><div class="stat-label">Emoji Reactions</div><div class="stat-value">${
+        logs.filter((l) => l.emoji).length
+      }</div></div>
+    </div>
+    ${
+      logs.length
+        ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
+      <table class="admin-table"><thead><tr><th>Type</th><th>Value</th><th>Tags</th><th>Note</th><th>Time</th></tr></thead><tbody>
+      ${[...logs]
+        .reverse()
+        .map(
+          (l) => `<tr>
+        <td style="color:var(--muted)">${l.emoji ? "Reaction" : "Rating"}</td>
+        <td style="color:${l.emoji ? "inherit" : "var(--gold)"}">${
+            l.emoji || "★".repeat(l.rating || 0)
+          }</td>
+        <td style="font-size:.75rem;color:var(--muted)">${
+          (l.tags || []).join(", ") || "—"
+        }</td>
+        <td style="font-size:.8rem;color:var(--muted)">${l.note || "—"}</td>
+        <td style="color:var(--muted)">${new Date(
+          l.ts
+        ).toLocaleTimeString()}</td>
+      </tr>`
+        )
+        .join("")}
+      </tbody></table></div>`
+        : `<div class="empty-state"><div class="empty-icon">📋</div><p>No feedback yet.</p></div>`
+    }
+    ${
+      logs.length
+        ? `<button class="btn-outline" style="margin-top:1rem" onclick="if(confirm('Clear all feedback?')){state.feedbackLog=[];saveFeedback();renderAdminTab(null,'feedback');}">Clear All Feedback</button>`
+        : ""
+    }`;
+        } else if (tab === "users") {
+          const list = Object.values(allUsers);
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Registered Users</h2></div>
+    ${
+      list.length
+        ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
+      <table class="admin-table"><thead><tr><th>Username</th><th>Email</th><th>Notifications</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
+      ${list
+        .map(
+          (u) => `<tr>
+        <td style="font-weight:500">${u.username}</td>
+        <td style="color:var(--muted)">${u.email}</td>
+        <td style="color:var(--muted)">${u.notify || "all"}</td>
+        <td style="color:var(--muted)">${new Date(
+          u.createdAt
+        ).toLocaleDateString()}</td>
+        <td><button class="btn-icon" style="width:28px;height:28px" onclick="adminDeleteUser('${
+          u.username
+        }')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button></td></tr>`
+        )
+        .join("")}
+      </tbody></table></div>`
+        : `<div class="empty-state"><div class="empty-icon">👤</div><p>No registered users yet.</p></div>`
+    }`;
+        } else if (tab === "archives" || tab === "content") {
+          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">${
+            tab === "archives" ? "Archive Management" : "All Content"
+          }</h2>
+      <button class="btn-primary" onclick="renderAdminTab(null,'upload')">+ New Article</button></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
+      <table class="admin-table"><thead><tr><th>Title</th><th>Type</th><th>Tag</th><th>Date</th><th>Likes</th><th>Actions</th></tr></thead><tbody>
+      ${[...DATA.articles, ...DATA.stories]
+        .map(
+          (i) => `<tr>
+        <td>${(i.title || "").slice(0, 34)}…</td>
+        <td style="color:var(--muted);text-transform:capitalize">${i.type}</td>
+        <td><span style="font-size:.7rem;color:var(--cyan)">${
+          i.tag || "—"
+        }</span></td>
+        <td style="color:var(--muted)">${i.date || "—"}</td>
+        <td>${i.likes || 0}</td>
+        <td><button class="btn-icon" style="width:28px;height:28px" onclick="adminDeleteContent(${JSON.stringify(
+          i.id
+        )},'${i.type}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button></td></tr>`
+        )
+        .join("")}
+      </tbody></table></div>`;
+        }
+      }
+
+      // ─── ADMIN CONTENT ACTIONS ─────────────────────────────────────
+      function publishContent(type) {
+        const title = document.getElementById("newTitle")?.value.trim();
+        const tag = document.getElementById("newTag")?.value;
+        const author = document.getElementById("newAuthor")?.value.trim();
+        const readTime = document.getElementById("newReadTime")?.value.trim();
+        const excerpt = document.getElementById("newExcerpt")?.value.trim();
+        const body = document.getElementById("newBody")?.value.trim();
+        if (!title) {
+          showToast("Title is required.");
+          return;
+        }
+        const EMOJIS = {
+          Climate: "🌊",
+          "Mental Health": "🧠",
+          Education: "📚",
+          Environment: "🌱",
+          "Human Rights": "✊",
+          Technology: "💻",
+          Migration: "🚢",
+          Community: "🤝",
+        };
+        const newItem = {
+          id: Date.now(),
+          type,
+          title,
+          tag,
+          author: author || "Nuvara Editorial",
+          readTime: readTime || "5 min",
+          excerpt,
+          body: body
+            ? `<p>${body.replace(/\n\n/g, "</p><p>")}</p>`
+            : ARTICLE_BODY,
+          emoji: EMOJIS[tag] || "📄",
+          date: new Date().toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
+          likes: 0,
+          comments: 0,
+        };
+        const key = `nuvara-custom-${type}s`;
+        const list = LS.get(key, []);
+        list.unshift(newItem);
+        LS.set(key, list);
+        DATA = loadDATA();
+        initRender();
+        showToast(`${type === "article" ? "Article" : "Story"} published!`);
+        renderAdminTab(null, "overview");
+      }
+
+      function publishThought() {
+        const text = document.getElementById("thoughtText")?.value.trim();
+        if (!text || text.length < 10) {
+          showToast("Thought is too short.");
+          return;
+        }
+        const newT = {
+          id: Date.now(),
+          type: "thought",
+          text,
+          date: new Date().toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
+          likes: 0,
+        };
+        const list = LS.get("nuvara-custom-thoughts", []);
+        list.unshift(newT);
+        LS.set("nuvara-custom-thoughts", list);
+        DATA = loadDATA();
+        initRender();
+        showToast("Thought posted!");
+        document.getElementById("thoughtText").value = "";
+      }
+
+      // Store blob URL for local video files
+      let pendingVideoBlobUrl = null;
+      function publishVideo() {
+        const title = document.getElementById("videoTitle")?.value.trim();
+        const tag = document.getElementById("videoCategory")?.value;
+        const duration = document.getElementById("videoDuration")?.value.trim();
+        const url = document.getElementById("videoUrl")?.value.trim();
+        if (!title) {
+          showToast("Video title is required.");
+          return;
+        }
+        const newVideo = {
+          id: Date.now(),
+          type: "video",
+          title,
+          tag,
+          duration: duration || "—",
+          emoji: "🎬",
+          likes: 0,
+          url: url || null,
+          blobUrl: pendingVideoBlobUrl || null,
+        };
+        const list = LS.get("nuvara-custom-videos", []);
+        list.unshift(newVideo);
+        LS.set("nuvara-custom-videos", list);
+        DATA = loadDATA();
+        initRender();
+        pendingVideoBlobUrl = null;
+        showToast("Video added!");
+        renderAdminTab(null, "overview");
+      }
+
+      function adminDeleteContent(id, type) {
+        if (!confirm("Delete this content?")) return;
+        const key = `nuvara-custom-${type}s`;
+        LS.set(
+          key,
+          LS.get(key, []).filter((i) => i.id !== id)
+        );
+        DATA = loadDATA();
+        initRender();
+        renderAdminTab(null, "overview");
+        showToast("Deleted.");
+      }
+      function adminDeleteUser(username) {
+        if (!confirm(`Delete user "${username}"?`)) return;
+        const users = getUsers();
+        delete users[username.toLowerCase()];
+        saveUsers(users);
+        renderAdminTab(null, "users");
+        showToast("User deleted.");
+      }
+
+      // ─── VIDEO UPLOAD ──────────────────────────────────────────────
+      function handleVideoUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const allowed = ["video/mp4", "video/quicktime", "video/webm"];
+        if (!allowed.includes(file.type)) {
+          showToast("MP4, MOV, or WebM only.");
+          input.value = "";
+          return;
+        }
+        if (file.size > 500 * 1024 * 1024) {
+          showToast("File too large. Max 500MB.");
+          input.value = "";
+          return;
+        }
+        const prog = document.getElementById("uploadProgress");
+        const fill = document.getElementById("uploadFill");
+        const pct = document.getElementById("uploadPct");
+        const fname = document.getElementById("uploadFilename");
+        if (prog) {
+          prog.style.display = "block";
+          fname.textContent = file.name;
+        }
+        let p = 0;
+        const iv = setInterval(() => {
+          p += Math.random() * 18;
+          if (p >= 100) {
+            p = 100;
+            clearInterval(iv);
+            // Create blob URL so video plays in lightbox
+            pendingVideoBlobUrl = URL.createObjectURL(file);
+            showVideoPreview(pendingVideoBlobUrl, file.name);
+          }
+          if (fill) fill.style.width = p + "%";
+          if (pct) pct.textContent = Math.floor(p) + "%";
+        }, 120);
+      }
+
+      function showVideoPreview(blobUrl, filename) {
+        const wrap = document.getElementById("videoPreviewWrap");
+        const vid = document.getElementById("videoPreviewEl");
+        if (!wrap || !vid) return;
+        vid.src = blobUrl;
+        wrap.style.display = "block";
+        const titleInput = document.getElementById("videoTitle");
+        if (titleInput && !titleInput.value)
+          titleInput.value = (filename || "")
+            .replace(/\.[^.]+$/, "")
+            .replace(/[-_]/g, " ");
+        showToast("Video ready — fill in details and click Add Video.");
+      }
+
+      function previewCoverImage(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const wrap = document.getElementById("coverPreview");
+        const img = document.getElementById("coverImg");
+        if (!wrap || !img) return;
+        img.src = URL.createObjectURL(file);
+        wrap.style.display = "block";
+        showToast("Cover image selected");
+      }
+
+      // ─── MOBILE MENU ───────────────────────────────────────────────
+      function toggleMobileMenu() {
+        const links = document.getElementById("navLinks");
+        const open = links.style.display === "flex";
+        links.style.cssText = open
+          ? ""
+          : "display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--surface);padding:1rem;border-bottom:1px solid var(--border);z-index:999";
+      }
+
+      // ─── READING PROGRESS ──────────────────────────────────────────
+      window.addEventListener("scroll", () => {
+        const p = document.getElementById("readingProgress");
+        if (!p) return;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        p.style.transform = `scaleX(${Math.min(window.scrollY / h, 1)})`;
+      });
+
+      // ─── TOAST ─────────────────────────────────────────────────────
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      // ─── BOOT ──────────────────────────────────────────────────────
+      (function boot() {
+        // Theme
+        document.documentElement.setAttribute("data-theme", state.theme);
+        const icon = document.getElementById("themeIcon");
+        if (icon && state.theme === "light")
+          icon.innerHTML =
+            '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+
+        // Clear any legacy seed content stored from previous versions
+        [
+          "nuvara-custom-articles",
+          "nuvara-custom-stories",
+          "nuvara-custom-videos",
+          "nuvara-custom-thoughts",
+        ].forEach((k) => {
+          const items = LS.get(k, []);
+          // Remove items that match old seed IDs (1-26) — keep only genuine admin content (id > 100)
+          const cleaned = items.filter((i) => i.id > 100);
+          if (cleaned.length !== items.length) LS.set(k, cleaned);
+        });
+
+        // First-launch admin setup
+        if (needsSetup()) {
+          showSetup();
+        }
+
+        // Restore session
+        const session = LS.get("nuvara-session");
+        if (session?.user) {
+          state.loggedIn = true;
+          state.isAdmin = session.isAdmin;
+          state.currentUser = session.user;
+          document.getElementById("navAuth").style.display = "none";
+          document.getElementById("navUser").style.display = "flex";
+          document.getElementById("userAvatar").textContent = getInitials();
+          if (state.isAdmin && !document.getElementById("adminNavLink")) {
+            const li = document.createElement("li");
+            li.innerHTML =
+              '<a href="#" id="adminNavLink" onclick="showPage(\'admin\')" data-page="admin" style="color:var(--cyan)">Admin</a>';
+            document.getElementById("navLinks").appendChild(li);
+          }
+        }
+        initRender();
+      })();
+    </script>
+  </body>
+</html>
