@@ -1369,39 +1369,6 @@
         margin-top: 0.3rem;
       }
 
-      /* ─── ADMIN SETUP SCREEN ───────────────────────────────────── */
-      .setup-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 8000;
-        background: var(--bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5rem;
-      }
-      .setup-box {
-        background: var(--surface);
-        border: 1px solid var(--border2);
-        border-radius: var(--rad);
-        padding: 2.5rem;
-        width: 100%;
-        max-width: 420px;
-      }
-      .setup-logo {
-        font-family: var(--serif);
-        font-size: 2rem;
-        color: var(--cyan);
-        margin-bottom: 0.25rem;
-      }
-      .setup-tagline {
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 2rem;
-      }
-
       /* ─── BOOKMARKS / PROFILE ──────────────────────────────────── */
       .bookmarks-page {
         padding: 4rem 2rem;
@@ -1848,84 +1815,6 @@
     </style>
   </head>
   <body>
-    <!-- ADMIN FIRST-LAUNCH SETUP -->
-    <div class="setup-overlay" id="setupOverlay" style="display: none">
-      <div class="setup-box">
-        <div class="setup-logo">Nuvara</div>
-        <div class="setup-tagline">Stories with Purpose</div>
-        <h2
-          style="
-            font-family: var(--serif);
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-bottom: 0.4rem;
-          "
-        >
-          Create Admin Account
-        </h2>
-        <p
-          style="
-            font-size: 0.83rem;
-            color: var(--muted);
-            margin-bottom: 1.75rem;
-          "
-        >
-          This is your one-time setup. These credentials will be stored securely
-          and used to access the admin dashboard.
-        </p>
-        <div class="field">
-          <label>Admin Username</label
-          ><input
-            type="text"
-            id="setupUser"
-            placeholder="5–10 letters & numbers"
-            maxlength="10"
-            oninput="liveUsernameCheck(this)"
-          />
-          <div class="username-status" id="usernameStatus"></div>
-        </div>
-        <div class="field">
-          <label>Admin Password</label
-          ><input
-            type="password"
-            id="setupPass"
-            placeholder="At least 8 characters"
-          />
-        </div>
-        <div class="field">
-          <label>Confirm Password</label
-          ><input
-            type="password"
-            id="setupPass2"
-            placeholder="Repeat password"
-          />
-          <div class="field-error" id="setupErr"></div>
-        </div>
-        <button
-          class="btn-primary"
-          style="
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-          "
-          onclick="completeSetup()"
-        >
-          Create Admin Account
-        </button>
-        <p
-          style="
-            font-size: 0.72rem;
-            color: var(--muted2);
-            margin-top: 1rem;
-            text-align: center;
-          "
-        >
-          These credentials are stored locally in your browser. Keep them safe.
-        </p>
-      </div>
-    </div>
-
     <!-- READING PROGRESS -->
     <div class="reading-progress" id="readingProgress"></div>
 
@@ -2031,7 +1920,7 @@
             </h1>
             <p class="hero-sub">
               Navara is a curated space for awareness articles, short stories,
-              thought pieces, and visual media, designed to inform, inspire, and
+              thought pieces, and visual media designed to inform, inspire, and
               connect.
             </p>
             <div class="hero-actions">
@@ -2571,59 +2460,56 @@
           : LS.del("nuvara-session");
       }
 
-      // ─── ADMIN SETUP (Option C) ────────────────────────────────────
-      function needsSetup() {
-        return !LS.get("nuvara-admin-hash");
+      // ─── ADMIN SYSTEM ─────────────────────────────────────────────
+      // Admins are regular users with isAdmin:true in the users store.
+      // Max 2 admins at any time. Promotion done from admin dashboard only.
+      const MAX_ADMINS = 2;
+
+      function getAdminCount() {
+        return Object.values(getUsers()).filter((u) => u.isAdmin).length;
       }
 
-      function showSetup() {
-        document.getElementById("setupOverlay").style.display = "flex";
+      function canPromote() {
+        return getAdminCount() < MAX_ADMINS;
       }
 
-      function completeSetup() {
-        const u = document.getElementById("setupUser")?.value.trim();
-        const p = document.getElementById("setupPass")?.value;
-        const p2 = document.getElementById("setupPass2")?.value;
-        const errEl = document.getElementById("setupErr");
-        const showErr = (m) => {
-          errEl.textContent = m;
-          errEl.style.display = "block";
-        };
-
-        if (!/^[a-zA-Z0-9]{5,10}$/.test(u)) {
-          showErr("Username must be 5–10 letters and numbers.");
+      function promoteUser(username) {
+        if (!canPromote()) {
+          showToast("Maximum of 2 admins allowed.");
           return;
         }
-        if (!p || p.length < 8) {
-          showErr("Password must be at least 8 characters.");
+        const users = getUsers();
+        const key = username.toLowerCase();
+        if (!users[key]) {
+          showToast("User not found.");
           return;
         }
-        if (p !== p2) {
-          showErr("Passwords do not match.");
+        if (users[key].isAdmin) {
+          showToast("User is already an admin.");
           return;
         }
-
-        // Store hashed credentials — admin username + password hash
-        LS.set("nuvara-admin-hash", {
-          usernameHash: simpleHash(u.toLowerCase()),
-          passwordHash: simpleHash(p),
-          username: u,
-        });
-        document.getElementById("setupOverlay").style.display = "none";
-        showToast("Admin account created! You can now sign in.");
+        users[key].isAdmin = true;
+        saveUsers(users);
+        renderAdminTab(null, "users");
+        showToast(`${username} is now an admin.`);
       }
 
-      function isAdminCredentials(username, password) {
-        const adminData = LS.get("nuvara-admin-hash");
-        if (!adminData) return false;
-        return (
-          simpleHash(username.toLowerCase()) === adminData.usernameHash &&
-          simpleHash(password) === adminData.passwordHash
-        );
-      }
-
-      function getAdminUsername() {
-        return LS.get("nuvara-admin-hash")?.username || "admin";
+      function demoteUser(username) {
+        // Prevent demoting yourself
+        if (
+          state.currentUser &&
+          state.currentUser.username.toLowerCase() === username.toLowerCase()
+        ) {
+          showToast("You can't remove your own admin access.");
+          return;
+        }
+        const users = getUsers();
+        const key = username.toLowerCase();
+        if (!users[key]) return;
+        users[key].isAdmin = false;
+        saveUsers(users);
+        renderAdminTab(null, "users");
+        showToast(`${username} is now a regular user.`);
       }
 
       // ─── USERNAME VALIDATION ───────────────────────────────────────
@@ -2636,10 +2522,6 @@
         if (!/^[a-zA-Z0-9]+$/.test(c))
           return { ok: false, msg: "Letters and numbers only." };
         if (getUsers()[c.toLowerCase()])
-          return { ok: false, msg: "Username already taken." };
-        // Also check against admin username
-        const adminData = LS.get("nuvara-admin-hash");
-        if (adminData && simpleHash(c.toLowerCase()) === adminData.usernameHash)
           return { ok: false, msg: "Username already taken." };
         return { ok: true, msg: "✓ Available" };
       }
@@ -3469,22 +3351,7 @@
           return;
         }
 
-        // Check admin credentials (username-based, not email)
-        if (isAdminCredentials(id, pass)) {
-          state.loggedIn = true;
-          state.isAdmin = true;
-          state.currentUser = {
-            username: getAdminUsername(),
-            email: "admin@nuvara.com",
-          };
-          closeModal();
-          onLoginSuccess();
-          saveSession();
-          showToast("Welcome, Admin! ⚡");
-          return;
-        }
-
-        // Check regular users by email or username
+        // Look up user by email or username
         const users = getUsers();
         const user = validateEmail(id)
           ? Object.values(users).find((u) => u.email === id.toLowerCase())
@@ -3497,17 +3364,23 @@
           showErr("Incorrect password.");
           return;
         }
+
         state.loggedIn = true;
-        state.isAdmin = false;
+        state.isAdmin = !!user.isAdmin;
         state.currentUser = {
           username: user.username,
           email: user.email,
           notify: user.notify,
+          isAdmin: !!user.isAdmin,
         };
         closeModal();
         onLoginSuccess();
         saveSession();
-        showToast(`Welcome back, ${user.username}!`);
+        showToast(
+          state.isAdmin
+            ? `Welcome back, ${user.username}! ⚡`
+            : `Welcome back, ${user.username}!`
+        );
       }
 
       function doSignup() {
@@ -3565,16 +3438,17 @@
           email,
           passwordHash: simpleHash(pass),
           notify: "all",
+          isAdmin: false,
           createdAt: new Date().toISOString(),
         };
         saveUsers(users);
         state.loggedIn = true;
         state.isAdmin = false;
-        state.currentUser = { username, email, notify: "all" };
+        state.currentUser = { username, email, notify: "all", isAdmin: false };
         closeModal();
         onLoginSuccess();
         saveSession();
-        showToast(`Welcome to Nuvara, ${username}! 🎉`);
+        showToast(`Welcome to Nuvara, ${username}!`);
       }
 
       function doReset() {
@@ -3928,29 +3802,73 @@
     }`;
         } else if (tab === "users") {
           const list = Object.values(allUsers);
-          el.innerHTML = `<div class="admin-header"><h2 class="admin-title">Registered Users</h2></div>
+          const adminCount = list.filter((u) => u.isAdmin).length;
+          const atLimit = adminCount >= MAX_ADMINS;
+          el.innerHTML = `<div class="admin-header">
+      <h2 class="admin-title">Users</h2>
+      <div style="font-size:.82rem;color:var(--muted)">
+        <span style="color:${
+          atLimit ? "var(--error)" : "var(--cyan)"
+        }">${adminCount} / ${MAX_ADMINS}</span> admin slots used
+      </div>
+    </div>
+    <div style="background:var(--cyan4);border:1px solid var(--border2);border-radius:var(--rad-sm);padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:.83rem;color:var(--text2)">
+      Nuvara supports a maximum of <strong>${MAX_ADMINS} admins</strong>. Promote a regular user to give them admin access. You can demote an admin at any time.
+    </div>
     ${
       list.length
         ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);overflow:hidden">
-      <table class="admin-table"><thead><tr><th>Username</th><th>Email</th><th>Notifications</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
+      <table class="admin-table"><thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
       ${list
-        .map(
-          (u) => `<tr>
-        <td style="font-weight:500">${u.username}</td>
-        <td style="color:var(--muted)">${u.email}</td>
-        <td style="color:var(--muted)">${u.notify || "all"}</td>
-        <td style="color:var(--muted)">${new Date(
-          u.createdAt
-        ).toLocaleDateString()}</td>
-        <td><button class="btn-icon" style="width:28px;height:28px" onclick="adminDeleteUser('${
-          u.username
-        }')">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        </button></td></tr>`
-        )
+        .map((u) => {
+          const isSelf =
+            state.currentUser &&
+            state.currentUser.username.toLowerCase() ===
+              u.username.toLowerCase();
+          const promoteBtn =
+            !u.isAdmin && !atLimit
+              ? `<button class="btn-outline" style="padding:.25rem .7rem;font-size:.72rem;margin-right:.4rem" onclick="promoteUser('${u.username}')">Make Admin</button>`
+              : !u.isAdmin && atLimit
+              ? `<span style="font-size:.72rem;color:var(--muted)">Limit reached</span>`
+              : "";
+          const demoteBtn =
+            u.isAdmin && !isSelf
+              ? `<button style="padding:.25rem .7rem;font-size:.72rem;border:1px solid rgba(226,92,92,.3);color:var(--error);border-radius:var(--rad-sm);background:rgba(226,92,92,.08);cursor:pointer" onclick="demoteUser('${u.username}')">Remove Admin</button>`
+              : u.isAdmin && isSelf
+              ? `<span style="font-size:.72rem;color:var(--muted)">You</span>`
+              : "";
+          return `<tr>
+          <td style="font-weight:500">${u.username}${
+            isSelf
+              ? '<span style="font-size:.68rem;color:var(--cyan);margin-left:.4rem;vertical-align:middle">You</span>'
+              : ""
+          }
+          </td>
+          <td style="color:var(--muted)">${u.email}</td>
+          <td><span style="font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:20px;${
+            u.isAdmin
+              ? "background:rgba(78,205,196,.12);color:var(--cyan)"
+              : "background:var(--surface2);color:var(--muted)"
+          }">${u.isAdmin ? "Admin" : "Member"}</span></td>
+          <td style="color:var(--muted)">${new Date(
+            u.createdAt
+          ).toLocaleDateString()}</td>
+          <td style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">
+            ${promoteBtn}${demoteBtn}
+            ${
+              !isSelf
+                ? `<button class="btn-icon" style="width:28px;height:28px;flex-shrink:0" onclick="adminDeleteUser('${u.username}')">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>`
+                : ""
+            }
+          </td></tr>`;
+        })
         .join("")}
       </tbody></table></div>`
-        : `<div class="empty-state"><div class="empty-icon">👤</div><p>No registered users yet.</p></div>`
+        : `<div class="empty-state"><div class="empty-icon" style="font-size:2rem;opacity:.4">
+        <svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:var(--muted);fill:none;stroke-width:1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div><p style="font-weight:500;color:var(--text);margin-bottom:.4rem">No users yet</p><p style="font-size:.82rem">Users will appear here once they sign up.</p></div>`
     }`;
         } else if (tab === "archives" || tab === "content") {
           el.innerHTML = `<div class="admin-header"><h2 class="admin-title">${
@@ -4225,17 +4143,16 @@
           if (cleaned.length !== items.length) LS.set(k, cleaned);
         });
 
-        // First-launch admin setup
-        if (needsSetup()) {
-          showSetup();
-        }
-
         // Restore session
         const session = LS.get("nuvara-session");
         if (session?.user) {
+          // Always re-read isAdmin from the live user store in case it was changed
+          const users = getUsers();
+          const liveUser = users[session.user.username.toLowerCase()];
+          const isAdmin = liveUser ? !!liveUser.isAdmin : false;
           state.loggedIn = true;
-          state.isAdmin = session.isAdmin;
-          state.currentUser = session.user;
+          state.isAdmin = isAdmin;
+          state.currentUser = { ...session.user, isAdmin };
           document.getElementById("navAuth").style.display = "none";
           document.getElementById("navUser").style.display = "flex";
           document.getElementById("userAvatar").textContent = getInitials();
