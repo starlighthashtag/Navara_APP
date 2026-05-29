@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nuvara — Stories with Purpose</title>
+    <title>Navara — Stories with Purpose</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -1919,9 +1919,9 @@
               Stories that <em>move</em> the world forward
             </h1>
             <p class="hero-sub">
-              Nuvara is a curated space for awareness articles, short stories,
-              thought pieces, and visual media designed to inform, inspire, and
-              connect.
+              Navara is a curated space for awareness articles, short stories,
+              thought pieces, and visual media — designed to inform, inspire,
+              and connect.
             </p>
             <div class="hero-actions">
               <button
@@ -1973,7 +1973,7 @@
         <div class="page-feedback">
           <div class="page-feedback-inner">
             <div class="page-feedback-text">
-              <h4>How is your Nuvara experience?</h4>
+              <h4>How is your Navara experience?</h4>
               <p>Your feedback helps us publish stories that matter more.</p>
             </div>
             <div class="feedback-emoji-row">
@@ -2174,7 +2174,7 @@
             <div class="profile-avatar" id="profileAvatar">?</div>
             <div>
               <div class="profile-name" id="profileName">—</div>
-              <div class="profile-bio" id="profileBio">Nuvara reader</div>
+              <div class="profile-bio" id="profileBio">Navara reader</div>
             </div>
           </div>
         </div>
@@ -2405,23 +2405,23 @@
 
       function loadDATA() {
         return {
-          articles: [...SEED.articles, ...LS.get("nuvara-custom-articles", [])],
-          stories: [...SEED.stories, ...LS.get("nuvara-custom-stories", [])],
-          videos: [...SEED.videos, ...LS.get("nuvara-custom-videos", [])],
-          thoughts: [...SEED.thoughts, ...LS.get("nuvara-custom-thoughts", [])],
+          articles: [...SEED.articles, ...LS.get("navara-custom-articles", [])],
+          stories: [...SEED.stories, ...LS.get("navara-custom-stories", [])],
+          videos: [...SEED.videos, ...LS.get("navara-custom-videos", [])],
+          thoughts: [...SEED.thoughts, ...LS.get("navara-custom-thoughts", [])],
         };
       }
       let DATA = loadDATA();
 
       // ─── STATE ─────────────────────────────────────────────────────
       const state = {
-        theme: LS.get("nuvara-theme", "dark"),
+        theme: LS.get("navara-theme", "dark"),
         loggedIn: false,
         isAdmin: false,
         currentUser: null,
-        likes: new Set(LS.get("nuvara-likes", [])),
-        bookmarks: new Set(LS.get("nuvara-bookmarks", [])),
-        feedbackLog: LS.get("nuvara-feedback", []),
+        likes: new Set(LS.get("navara-likes", [])),
+        bookmarks: new Set(LS.get("navara-bookmarks", [])),
+        feedbackLog: LS.get("navara-feedback", []),
       };
 
       function simpleHash(s) {
@@ -2437,33 +2437,33 @@
       // (up to the 2-admin limit). Keep it private.
       const ADMIN_SECRET = "navara-admin-2026";
       function getUsers() {
-        return LS.get("nuvara-users", {});
+        return LS.get("navara-users", {});
       }
       function saveUsers(u) {
-        LS.set("nuvara-users", u);
+        LS.set("navara-users", u);
       }
       function getComments(id) {
-        return LS.get("nuvara-comments-" + id, []);
+        return LS.get("navara-comments-" + id, []);
       }
       function saveComments(id, c) {
-        LS.set("nuvara-comments-" + id, c);
+        LS.set("navara-comments-" + id, c);
       }
       function saveLikes() {
-        LS.set("nuvara-likes", [...state.likes]);
+        LS.set("navara-likes", [...state.likes]);
       }
       function saveBookmarks() {
-        LS.set("nuvara-bookmarks", [...state.bookmarks]);
+        LS.set("navara-bookmarks", [...state.bookmarks]);
       }
       function saveFeedback() {
-        LS.set("nuvara-feedback", state.feedbackLog);
+        LS.set("navara-feedback", state.feedbackLog);
       }
       function saveSession() {
         state.loggedIn && state.currentUser
-          ? LS.set("nuvara-session", {
+          ? LS.set("navara-session", {
               user: state.currentUser,
               isAdmin: state.isAdmin,
             })
-          : LS.del("nuvara-session");
+          : LS.del("navara-session");
       }
 
       // ─── ADMIN SYSTEM ─────────────────────────────────────────────
@@ -2769,7 +2769,7 @@
       <h2 class="featured-title">${featured.title}</h2>
       <p class="featured-excerpt">${featured.excerpt || ""}</p>
       <div class="featured-meta">
-        <span>By ${featured.author || "Nuvara Editorial"}</span>
+        <span>By ${featured.author || "Navara Editorial"}</span>
         ${
           featured.readTime
             ? `<span class="read-time">⏱ ${featured.readTime}</span>`
@@ -2925,7 +2925,7 @@
     <span class="article-tag">${item.tag || ""}</span>
     <h1 class="article-title">${item.title}</h1>
     <div class="article-meta">
-      <span>By ${item.author || "Nuvara Editorial"}</span><span>${
+      <span>By ${item.author || "Navara Editorial"}</span><span>${
           item.date || ""
         }</span>
       ${
@@ -2997,7 +2997,7 @@
       <button class="btn-primary" onclick="submitArticleFeedback(${JSON.stringify(
         item.id
       )})" style="font-size:.85rem">Submit Feedback</button>
-      <div class="feedback-submitted" id="feedbackDone"><div class="check">✅</div><strong>Thank you!</strong><p style="font-size:.82rem;color:var(--muted);margin-top:.3rem">Your feedback shapes what Nuvara publishes next.</p></div>
+      <div class="feedback-submitted" id="feedbackDone"><div class="check">✅</div><strong>Thank you!</strong><p style="font-size:.82rem;color:var(--muted);margin-top:.3rem">Your feedback shapes what Navara publishes next.</p></div>
     </div>
     <div style="margin-top:2rem">
       <h3 style="font-family:var(--serif);font-size:1.3rem;font-weight:300;margin-bottom:1rem" id="commentHeading">Comments <span style="color:var(--muted);font-size:.9rem">(${
@@ -3220,7 +3220,7 @@
         document.getElementById("profileName").textContent = u.username;
         document.getElementById(
           "profileBio"
-        ).textContent = `${u.email} · Joined Nuvara`;
+        ).textContent = `${u.email} · Joined Navara`;
         document.getElementById("profileAvatar").textContent = getInitials();
         switchProfileTab(
           document.querySelector(".profile-tab.active"),
@@ -3245,6 +3245,8 @@
             : `<div class="empty-state"><div class="empty-icon">❤️</div><p>No liked content yet.</p></div>`;
         } else if (tab === "settings") {
           const u = state.currentUser;
+          const alreadyAdmin = state.isAdmin;
+          const adminSlotsFull = !canPromote();
           content.innerHTML = `<div style="max-width:480px">
       <h3 style="font-family:var(--serif);font-size:1.4rem;font-weight:300;margin-bottom:1.5rem">Account Settings</h3>
       <div class="field"><label>Username</label><input type="text" value="${
@@ -3269,6 +3271,36 @@
       <div class="field"><label>New Password (leave blank to keep current)</label><input type="password" id="settingsPass" placeholder="At least 6 characters"/></div>
       <button class="btn-primary" style="margin-top:.5rem" onclick="saveSettings()">Save Changes</button>
       <button class="btn-outline" style="margin-left:1rem;margin-top:.5rem" onclick="doLogout()">Log Out</button>
+
+      ${
+        alreadyAdmin
+          ? `
+      <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span style="font-size:.85rem;font-weight:600;color:var(--cyan)">Admin Account</span>
+        </div>
+        <p style="font-size:.8rem;color:var(--muted)">You have full admin access to Navara.</p>
+      </div>`
+          : adminSlotsFull
+          ? `
+      <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)">
+        <p style="font-size:.8rem;color:var(--muted)">Admin slots are currently full (${MAX_ADMINS}/${MAX_ADMINS}).</p>
+      </div>`
+          : `
+      <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span style="font-size:.85rem;font-weight:500;color:var(--text)">Have an admin code?</span>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <input type="password" id="adminCodeInput" placeholder="Enter admin code" style="flex:1;height:40px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rad-sm);padding:0 1rem;color:var(--text);font-size:.88rem;outline:none"/>
+          <button class="btn-primary" style="padding:.5rem 1.1rem;white-space:nowrap" onclick="claimAdmin()">Claim Access</button>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:.5rem">Enter the code provided by the site owner to gain admin access.</p>
+        <div id="adminCodeErr" style="font-size:.72rem;color:var(--error);margin-top:.3rem;display:none"></div>
+      </div>`
+      }
     </div>`;
         }
       }
@@ -3309,14 +3341,14 @@
       <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
       <div id="loginErr" style="font-size:.78rem;color:var(--error);margin-bottom:.75rem;display:none"></div>
       <button class="btn-primary" style="width:100%;padding:.75rem;font-size:.9rem" onclick="doLogin()">Sign In</button>
-      <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Join Nuvara</a><br><a onclick="openModal('reset')" style="color:var(--muted)">Forgot password?</a><br><a onclick="toggleAdminField()" style="color:var(--muted2);font-size:.72rem;margin-top:.5rem;display:inline-block">Admin access</a></div>
+      <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Join Navara</a><br><a onclick="openModal('reset')" style="color:var(--muted)">Forgot password?</a><br><a onclick="toggleAdminField()" style="color:var(--muted2);font-size:.72rem;margin-top:.5rem;display:inline-block">Admin access</a></div>
       <div id="adminCodeWrap" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
         <div class="field" style="margin-bottom:.75rem"><label>Admin Code</label><input type="text" id="adminCodeInput" placeholder="Enter your admin access code" autocomplete="off"/></div>
         <button class="btn-outline" style="width:100%;padding:.6rem" onclick="claimAdmin()">Claim Admin Access</button>
         <p style="font-size:.72rem;color:var(--muted);margin-top:.6rem">You must be signed in first. The admin code is provided by the site owner.</p>
       </div>`;
         } else if (type === "signup") {
-          c.innerHTML = `<h2 class="modal-title">Join Nuvara</h2><p class="modal-sub">Create your account to engage with stories that matter.</p>
+          c.innerHTML = `<h2 class="modal-title">Join Navara</h2><p class="modal-sub">Create your account to engage with stories that matter.</p>
       <div class="field"><label>Username</label><input type="text" id="signupUsername" placeholder="5–10 letters & numbers" oninput="liveUsernameCheck(this)" maxlength="10" autocomplete="off"/>
         <div class="username-status" id="usernameStatus"></div>
         <div class="field-hint">5–10 characters, letters and numbers only.</div>
@@ -3459,7 +3491,7 @@
         closeModal();
         onLoginSuccess();
         saveSession();
-        showToast(`Welcome to Nuvara, ${username}!`);
+        showToast(`Welcome to Navara, ${username}!`);
       }
 
       function doReset() {
@@ -3497,34 +3529,49 @@
       }
 
       function claimAdmin() {
-        const code = document.getElementById("adminCodeInput")?.value.trim();
+        const input = document.getElementById("adminCodeInput");
+        const errEl = document.getElementById("adminCodeErr");
+        const code = input?.value.trim();
+        const showErr = (m) => {
+          if (errEl) {
+            errEl.textContent = m;
+            errEl.style.display = "block";
+          } else {
+            showToast(m);
+          }
+        };
+
         if (!code) {
-          showToast("Please enter the admin code.");
-          return;
-        }
-        if (code !== ADMIN_SECRET) {
-          showToast("Incorrect admin code.");
-          document.getElementById("adminCodeInput").value = "";
+          showErr("Please enter the admin code.");
           return;
         }
 
         // Must be logged in
         if (!state.loggedIn || !state.currentUser) {
-          showToast("Please sign in first, then use the admin code.");
-          return;
-        }
-
-        // Check admin limit
-        if (!canPromote()) {
-          showToast(
-            "Admin limit reached. Maximum of " + MAX_ADMINS + " admins allowed."
-          );
+          showErr("Please sign in first.");
           return;
         }
 
         // Already admin
         if (state.isAdmin) {
-          showToast("You are already an admin.");
+          showErr("You already have admin access.");
+          return;
+        }
+
+        // Wrong code
+        if (code !== ADMIN_SECRET) {
+          showErr("Incorrect admin code. Please try again.");
+          if (input) input.value = "";
+          return;
+        }
+
+        // Check admin limit
+        if (!canPromote()) {
+          showErr(
+            "Admin slots are full. Maximum of " +
+              MAX_ADMINS +
+              " admins allowed."
+          );
           return;
         }
 
@@ -3532,7 +3579,7 @@
         const users = getUsers();
         const key = state.currentUser.username.toLowerCase();
         if (!users[key]) {
-          showToast("User account not found.");
+          showErr("User account not found.");
           return;
         }
         users[key].isAdmin = true;
@@ -3543,7 +3590,7 @@
         state.currentUser.isAdmin = true;
         saveSession();
 
-        // Add admin nav link
+        // Add admin nav link immediately
         if (!document.getElementById("adminNavLink")) {
           const li = document.createElement("li");
           li.innerHTML =
@@ -3551,7 +3598,11 @@
           document.getElementById("navLinks").appendChild(li);
         }
 
-        closeModal();
+        // Refresh the settings tab to show admin badge
+        switchProfileTab(
+          document.querySelector(".profile-tab.active"),
+          "settings"
+        );
         showToast(
           "Admin access granted! Welcome, " + state.currentUser.username + " ⚡"
         );
@@ -3574,7 +3625,7 @@
         state.loggedIn = false;
         state.isAdmin = false;
         state.currentUser = null;
-        LS.del("nuvara-session");
+        LS.del("navara-session");
         document.getElementById("navAuth").style.display = "";
         document.getElementById("navUser").style.display = "none";
         const al = document.getElementById("adminNavLink");
@@ -3660,7 +3711,7 @@
             state.theme === "dark"
               ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
               : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-        LS.set("nuvara-theme", state.theme);
+        LS.set("navara-theme", state.theme);
       }
 
       // ─── ADMIN ─────────────────────────────────────────────────────
@@ -3675,10 +3726,10 @@
       function renderAdminTab(_, tab) {
         const el = document.getElementById("adminMain");
         if (!el) return;
-        const cA = LS.get("nuvara-custom-articles", []);
-        const cS = LS.get("nuvara-custom-stories", []);
-        const cV = LS.get("nuvara-custom-videos", []);
-        const cT = LS.get("nuvara-custom-thoughts", []);
+        const cA = LS.get("navara-custom-articles", []);
+        const cS = LS.get("navara-custom-stories", []);
+        const cV = LS.get("navara-custom-videos", []);
+        const cT = LS.get("navara-custom-thoughts", []);
         const allUsers = getUsers();
 
         if (tab === "overview") {
@@ -3791,10 +3842,10 @@
     <button class="btn-primary" onclick="publishThought()">Post Thought</button>`;
         } else if (tab === "comments") {
           const allKeys = Object.keys(localStorage).filter((k) =>
-            k.startsWith("nuvara-comments-")
+            k.startsWith("navara-comments-")
           );
           const allComments = allKeys.flatMap((k) => {
-            const itemId = k.replace("nuvara-comments-", "");
+            const itemId = k.replace("navara-comments-", "");
             const all2 = [...DATA.articles, ...DATA.stories];
             const item = all2.find((i) => String(i.id) === itemId);
             return LS.get(k, []).map((c) => ({
@@ -3893,7 +3944,7 @@
       </div>
     </div>
     <div style="background:var(--cyan4);border:1px solid var(--border2);border-radius:var(--rad-sm);padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:.83rem;color:var(--text2)">
-      Nuvara supports a maximum of <strong>${MAX_ADMINS} admins</strong>. Promote a regular user to give them admin access. You can demote an admin at any time.
+      Navara supports a maximum of <strong>${MAX_ADMINS} admins</strong>. Promote a regular user to give them admin access. You can demote an admin at any time.
     </div>
     ${
       list.length
@@ -4005,7 +4056,7 @@
           type,
           title,
           tag,
-          author: author || "Nuvara Editorial",
+          author: author || "Navara Editorial",
           readTime: readTime || "5 min",
           excerpt,
           body: body
@@ -4020,7 +4071,7 @@
           likes: 0,
           comments: 0,
         };
-        const key = `nuvara-custom-${type}s`;
+        const key = `navara-custom-${type}s`;
         const list = LS.get(key, []);
         list.unshift(newItem);
         LS.set(key, list);
@@ -4047,9 +4098,9 @@
           }),
           likes: 0,
         };
-        const list = LS.get("nuvara-custom-thoughts", []);
+        const list = LS.get("navara-custom-thoughts", []);
         list.unshift(newT);
-        LS.set("nuvara-custom-thoughts", list);
+        LS.set("navara-custom-thoughts", list);
         DATA = loadDATA();
         initRender();
         showToast("Thought posted!");
@@ -4078,9 +4129,9 @@
           url: url || null,
           blobUrl: pendingVideoBlobUrl || null,
         };
-        const list = LS.get("nuvara-custom-videos", []);
+        const list = LS.get("navara-custom-videos", []);
         list.unshift(newVideo);
-        LS.set("nuvara-custom-videos", list);
+        LS.set("navara-custom-videos", list);
         DATA = loadDATA();
         initRender();
         pendingVideoBlobUrl = null;
@@ -4090,7 +4141,7 @@
 
       function adminDeleteContent(id, type) {
         if (!confirm("Delete this content?")) return;
-        const key = `nuvara-custom-${type}s`;
+        const key = `navara-custom-${type}s`;
         LS.set(
           key,
           LS.get(key, []).filter((i) => i.id !== id)
@@ -4212,10 +4263,10 @@
 
         // Clear any legacy seed content stored from previous versions
         [
-          "nuvara-custom-articles",
-          "nuvara-custom-stories",
-          "nuvara-custom-videos",
-          "nuvara-custom-thoughts",
+          "navara-custom-articles",
+          "navara-custom-stories",
+          "navara-custom-videos",
+          "navara-custom-thoughts",
         ].forEach((k) => {
           const items = LS.get(k, []);
           // Remove items that match old seed IDs (1-26) — keep only genuine admin content (id > 100)
@@ -4224,7 +4275,7 @@
         });
 
         // Restore session
-        const session = LS.get("nuvara-session");
+        const session = LS.get("navara-session");
         if (session?.user) {
           // Always re-read isAdmin from the live user store in case it was changed
           const users = getUsers();
