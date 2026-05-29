@@ -1919,7 +1919,7 @@
               Stories that <em>move</em> the world forward
             </h1>
             <p class="hero-sub">
-              Navara is a curated space for awareness articles, short stories,
+              Nuvara is a curated space for awareness articles, short stories,
               thought pieces, and visual media designed to inform, inspire, and
               connect.
             </p>
@@ -2430,6 +2430,12 @@
           h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
         return h.toString(36);
       }
+
+      // ─── ADMIN SECRET CODE ─────────────────────────────────────────
+      // Change this to whatever secret code you want admins to use.
+      // Anyone who signs up and enters this code gets promoted to admin
+      // (up to the 2-admin limit). Keep it private.
+      const ADMIN_SECRET = "nuvara-admin-2025";
       function getUsers() {
         return LS.get("nuvara-users", {});
       }
@@ -3303,7 +3309,12 @@
       <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
       <div id="loginErr" style="font-size:.78rem;color:var(--error);margin-bottom:.75rem;display:none"></div>
       <button class="btn-primary" style="width:100%;padding:.75rem;font-size:.9rem" onclick="doLogin()">Sign In</button>
-      <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Join Nuvara</a><br><a onclick="openModal('reset')" style="color:var(--muted)">Forgot password?</a></div>`;
+      <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Join Nuvara</a><br><a onclick="openModal('reset')" style="color:var(--muted)">Forgot password?</a><br><a onclick="toggleAdminField()" style="color:var(--muted2);font-size:.72rem;margin-top:.5rem;display:inline-block">Admin access</a></div>
+      <div id="adminCodeWrap" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+        <div class="field" style="margin-bottom:.75rem"><label>Admin Code</label><input type="text" id="adminCodeInput" placeholder="Enter your admin access code" autocomplete="off"/></div>
+        <button class="btn-outline" style="width:100%;padding:.6rem" onclick="claimAdmin()">Claim Admin Access</button>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:.6rem">You must be signed in first. The admin code is provided by the site owner.</p>
+      </div>`;
         } else if (type === "signup") {
           c.innerHTML = `<h2 class="modal-title">Join Nuvara</h2><p class="modal-sub">Create your account to engage with stories that matter.</p>
       <div class="field"><label>Username</label><input type="text" id="signupUsername" placeholder="5–10 letters & numbers" oninput="liveUsernameCheck(this)" maxlength="10" autocomplete="off"/>
@@ -3475,6 +3486,75 @@
         saveUsers(users);
         closeModal();
         showToast("Password reset! You can now sign in.");
+      }
+
+      function toggleAdminField() {
+        const wrap = document.getElementById("adminCodeWrap");
+        if (!wrap) return;
+        wrap.style.display = wrap.style.display === "none" ? "block" : "none";
+        if (wrap.style.display === "block")
+          document.getElementById("adminCodeInput")?.focus();
+      }
+
+      function claimAdmin() {
+        const code = document.getElementById("adminCodeInput")?.value.trim();
+        if (!code) {
+          showToast("Please enter the admin code.");
+          return;
+        }
+        if (code !== ADMIN_SECRET) {
+          showToast("Incorrect admin code.");
+          document.getElementById("adminCodeInput").value = "";
+          return;
+        }
+
+        // Must be logged in
+        if (!state.loggedIn || !state.currentUser) {
+          showToast("Please sign in first, then use the admin code.");
+          return;
+        }
+
+        // Check admin limit
+        if (!canPromote()) {
+          showToast(
+            "Admin limit reached. Maximum of " + MAX_ADMINS + " admins allowed."
+          );
+          return;
+        }
+
+        // Already admin
+        if (state.isAdmin) {
+          showToast("You are already an admin.");
+          return;
+        }
+
+        // Promote in user store
+        const users = getUsers();
+        const key = state.currentUser.username.toLowerCase();
+        if (!users[key]) {
+          showToast("User account not found.");
+          return;
+        }
+        users[key].isAdmin = true;
+        saveUsers(users);
+
+        // Update live session
+        state.isAdmin = true;
+        state.currentUser.isAdmin = true;
+        saveSession();
+
+        // Add admin nav link
+        if (!document.getElementById("adminNavLink")) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            '<a href="#" id="adminNavLink" onclick="showPage(\'admin\')" data-page="admin" style="color:var(--cyan)">Admin</a>';
+          document.getElementById("navLinks").appendChild(li);
+        }
+
+        closeModal();
+        showToast(
+          "Admin access granted! Welcome, " + state.currentUser.username + " ⚡"
+        );
       }
 
       function onLoginSuccess() {
